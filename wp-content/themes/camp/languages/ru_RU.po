@@ -1,0 +1,165 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Camp v1.6\n"
+"Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
+"POT-Creation-Date: 2016-08-19 12:58+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: BestWebSoft <wp_theme@bestwebsoft.com>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
+"_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,"
+"_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 1.8.4\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: 404.php:15
+msgid "Not found"
+msgstr "Не найдено"
+
+#: archive.php:20 index.php:21 page.php:14
+msgid "Top"
+msgstr "Наверх"
+
+#: comments.php:21
+#, php-format
+msgid "One response to &ldquo; %2$s &rdquo;"
+msgid_plural "%1$s responses to &ldquo; %2$s &rdquo;"
+msgstr[0] "%1$s комментарий к &ldquo; %2$s &rdquo;"
+msgstr[1] "%1$s комментария к &ldquo; %2$s &rdquo;"
+msgstr[2] "%1$s комментариев к &ldquo; %2$s &rdquo;"
+
+#: comments.php:28 comments.php:50
+msgid "&larr; Older comments"
+msgstr "&larr; Предыдущие комментарии"
+
+#: comments.php:31 comments.php:53
+msgid "Newer comments &rarr;"
+msgstr "Новые комментарии &rarr;"
+
+#: comments.php:38 functions.php:136
+msgid "Reply"
+msgstr "Ответить"
+
+#: comments.php:58
+msgid "Comments are closed."
+msgstr "Комментарии закрыты."
+
+#: content-none.php:11
+msgid "Nothing Found"
+msgstr "Ничего не найдено"
+
+#: content-none.php:12
+msgid "Try to search again"
+msgstr "Попытайтесь поискать еще"
+
+#: content.php:17
+msgid "Featured post"
+msgstr "Прикрепленная запись"
+
+#: content.php:29
+msgid "Posted on "
+msgstr "Опубликовано "
+
+#: content.php:36 content.php:38
+msgid "in"
+msgstr "в"
+
+#: content.php:47
+msgid "&larr; Previous"
+msgstr "&larr; Предыдущее"
+
+#: content.php:50
+msgid "Next &rarr;"
+msgstr "Слудующее &rarr;"
+
+#: content.php:66
+msgid "Tags: "
+msgstr "Метки: "
+
+#: content.php:70
+msgid "Add to slider?"
+msgstr "Добавить в слайдер?"
+
+#: footer.php:17
+#, php-format
+msgid "Powered by %s and %s"
+msgstr "Создано %s и %s"
+
+#: functions.php:60
+msgid "For Slider"
+msgstr "В стайдер"
+
+#: functions.php:72
+msgid "If you want to add this post to slider, choose the checkbox &nbsp;"
+msgstr "Если вы хотите добавить эту запись в слайдер, отметьте галочку &nbsp;"
+
+#: functions.php:121
+msgid "says:"
+msgstr "сказал:"
+
+#: functions.php:126
+msgid " at "
+msgstr " в "
+
+#: functions.php:138
+msgid "Edit"
+msgstr "Редактировать"
+
+#: functions.php:148
+msgid "Newer posts &rarr;"
+msgstr "Новые записи &rarr;"
+
+#: functions.php:153
+msgid "&larr; Older posts"
+msgstr "&larr; Предыдущие записи"
+
+#: functions.php:159
+msgid "Next post &rarr;"
+msgstr "Следующая запись &rarr;"
+
+#: functions.php:164
+msgid "&larr; Previous post"
+msgstr "&larr; Предыдущая запись"
+
+#: search.php:11
+#, php-format
+msgid "Search results for: %s"
+msgstr "Результаты поиска для: %s"
+
+#: searchform.php:2
+msgid "Enter search keyword"
+msgstr "Введите ключевое слово"
+
+#~ msgid "Archives: %s"
+#~ msgstr "Архив за: %s"
+
+#~ msgid "Category: %s"
+#~ msgstr "Категория: %s"
+
+#~ msgid "%d Responses to &ldquo; %s &rdquo;  "
+#~ msgstr "%d Ответ к &ldquo; %s &rdquo;  "
+
+#~ msgid "%d Responses to &ldquo; %s &rdquo;"
+#~ msgstr "%d Ответа к &ldquo; %s &rdquo;"
+
+#~ msgid "%d Responses to &ldquo; %s &rdquo; "
+#~ msgstr "%d Ответов к &ldquo; %s &rdquo; "
+
+#~ msgid " | Page %s"
+#~ msgstr " | Страница %s"
+
+#~ msgid "Tag: %s"
+#~ msgstr "Метка: %s"
+
+#~ msgid "Sorry, nothing found."
+#~ msgstr "Ничего не найдено"
