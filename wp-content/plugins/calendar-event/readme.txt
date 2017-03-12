@@ -4,7 +4,7 @@ Donate link: total-soft.pe.hu/calendar-event
 Tags: calendar, availability calendar, Booking calendar, calendars, event calendar, event, calendar widget, shortcode, date, picture calendar, responsive calendar, events calendar
 Requires at least: 3.4
 Tested up to: 4.7
-Stable tag: 1.1.7
+Stable tag: 1.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -255,6 +255,10 @@ A fully featured [calendar event demo](http://total-soft.pe.hu/calendar-event-1/
 23. An example of plugin in action (Flexible Event Theme)
 
 == Changelog ==
+
+= Version 1.1.8 (08.03.2017) =
+
+* Tested with WP version 4.7.3.
 
 = Version 1.1.7 (04.03.2017) =
 

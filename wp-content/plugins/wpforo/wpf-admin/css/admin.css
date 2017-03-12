@@ -221,4 +221,20 @@
 .wpforo-addons .wpforo-addon-block .addon-button{ margin-bottom:10px;}
 .wpforo-addons .wpforo-addon-block .note-installed { padding:10px 20px; background:#fff; border: 1px solid #ddd; box-shadow: 0 3px 3px rgba(0, 0, 0, 0.04); color:#2396D3; font-size:14px; margin-top:20px; }
 
-
+/**************************/
+/* TOOLS ******************/
+/**************************/
+#wpf-admin-wrap .wpf-tool-box { border:1px solid #ddd; min-height:350px; float:left; margin-right:1%; margin-bottom:10px; padding:10px 10px 20px 10px; box-sizing:border-box; width:100%;}
+#wpf-admin-wrap .wpf-tool-box h3{ margin:0px; font-weight:normal; border-bottom:1px dotted #ccc; padding-bottom:5px;}
+#wpf-admin-wrap .wpf-tool-box th{ padding:1px 5px 5px 5px; font-size:13px; text-align:left; font-weight:400; line-height:16px; border-bottom:1px solid #EDEDED;}
+#wpf-admin-wrap .wpf-tool-box td{ padding:1px 5px 5px 5px; border-bottom:1px solid #EDEDED;}
+#wpf-admin-wrap .wpf-tool-box.wpf-spam-attach.right-box { width:52%; min-width:500px;max-height:300px; overflow-y:auto; }
+#wpf-admin-wrap .wpf-tool-box.wpf-spam-attach.left-box { width:45%; min-width:300px;}
+#wpf-admin-wrap .wpf-tool-box.wpf-spam-attach .wpf-spam-attach-dir{ color:#4742C5; display:block; text-align:right; }
+#wpf-admin-wrap .wpf-tool-box.wpf-spam-attach tr:nth-child(even){ background:#EDEDED;}
+#wpf-admin-wrap .wpf-tool-box.wpf-spam-attach .wpf-spam-item{}
+#wpf-admin-wrap .wpf-tool-box.wpf-spam-attach .wpf-actions{}
+@media screen and (max-width:1250px) {
+	#wpf-admin-wrap .wpf-tool-box.wpf-spam-attach.left-box { width:100%; min-width:100%; min-height:none; max-height:none!important;}
+	#wpf-admin-wrap .wpf-tool-box.wpf-spam-attach.right-box { width:100%; min-width:100%; min-height:none; max-height:none!important;}
+}

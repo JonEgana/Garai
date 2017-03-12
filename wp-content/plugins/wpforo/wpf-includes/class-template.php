@@ -76,24 +76,26 @@ class wpForoTemplate{
                     	<input id="t_sticky" name="topic[type]" type="checkbox" value="0">&nbsp;&nbsp;
                     	<i class="fa fa-exclamation fa-0x"></i>&nbsp;&nbsp;<label for="t_sticky" style="padding-bottom:2px; cursor: pointer;"><?php wpforo_phrase('Set Topic Sticky'); ?>&nbsp;</label>
                     	<span class="wpfbs">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-					<?php endif ?>
+					<?php endif; ?>
                     <?php if($this->wpforo->perm->forum_can('p', $forumid) || $this->wpforo->perm->forum_can('op', $forumid)) : ?>
                     	<input id="t_private" name="topic[private]" type="checkbox" value="0">&nbsp;&nbsp;
                     	<i class="fa fa-eye-slash fa-0x"></i>&nbsp;&nbsp;<label for="t_private" style="padding-bottom:2px; cursor: pointer;" title="<?php wpforo_phrase('Only Admins and Moderators can see your private topics.'); ?>"><?php wpforo_phrase('Private Topic'); ?>&nbsp;</label>
                     	<span class="wpfbs">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-					<?php endif ?>
-	                <?php do_action('wpforo_topic_form_buttons_hook'); ?>&nbsp;&nbsp;
-                    <?php if(!defined('WPFOROATTACH_BASENAME') && $this->wpforo->perm->forum_can('a', $forumid)): ?>
-	                    <div class="wpf-default-attachment" style="padding-top:5px;">
-	                    	<label for="file"><?php wpforo_phrase('Attach file:') ?> </label> <input id="file" type="file" name="attachfile" />
-							<p><?php wpforo_phrase('Maximum allowed file size is'); echo ' ' . wpforo_print_size($this->wpforo->post_options['max_upload_size']); ?></p>
-						</div>
 					<?php endif; ?>
+	                <?php do_action('wpforo_topic_form_buttons_hook'); ?>&nbsp;&nbsp;
+                    <?php if( $this->wpforo->perm->can_attach() ): ?>
+						<?php if(!defined('WPFOROATTACH_BASENAME') && $this->wpforo->perm->forum_can('a', $forumid)): ?>
+                            <div class="wpf-default-attachment" style="padding-top:5px;">
+                                <label for="file"><?php wpforo_phrase('Attach file:') ?> </label> <input id="file" type="file" name="attachfile" />
+                                <p><?php wpforo_phrase('Maximum allowed file size is'); echo ' ' . wpforo_print_size($this->wpforo->post_options['max_upload_size']); ?></p>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
                 <?php if( wpforo_feature('subscribe_checkbox_on_post_editor', $this->wpforo) ) : ?>
-                	<div class="wpf-topic-sbs" style="float:left;"><input id="wpf-topic-sbs" type="checkbox" name="wpforo_topic_subs" value="1" <?php echo ( wpforo_feature('subscribe_checkbox_default_status', $this->wpforo) ) ? 'checked="true" ' : ''; ?>/>&nbsp;<label for="wpf-topic-sbs"><?php wpforo_phrase('Subscribe to this topic.') ?></label></div>
+                	<div class="wpf-topic-sbs" style="float:left;"><input id="wpf-topic-sbs" type="checkbox" name="wpforo_topic_subs" value="1" <?php echo ( wpforo_feature('subscribe_checkbox_default_status', $this->wpforo) ) ? 'checked="true" ' : ''; ?>/>&nbsp;<label for="wpf-topic-sbs"><?php wpforo_phrase('Subscribe to this topic') ?></label></div>
 				<?php endif; ?>
-				<input id="formbutton" type="submit" name="topic[save]" class="button button-primary forum_submit" value="<?php wpforo_phrase('Save') ?>">
+				<input id="formbutton" type="submit" name="topic[save]" class="button button-primary forum_submit" value="<?php wpforo_phrase('Submit') ?>">
                 <div class="wpf-clear"></div>
 			</form>
 		</div>
@@ -198,21 +200,23 @@ class wpForoTemplate{
 					?>
 					<div class="wpf-extra-fields">
 						<?php do_action('wpforo_reply_form_buttons_hook'); ?>&nbsp;&nbsp;
-	                    <?php if(!defined('WPFOROATTACH_BASENAME') && $this->wpforo->perm->forum_can('a', $forumid)): ?>
-		                    <div class="wpf-default-attachment">
-	                        	<label for="file"><?php wpforo_phrase('Attach file:') ?> </label> <input id="file" type="file" name="attachfile" />
-								<p><?php wpforo_phrase('Maximum allowed file size is'); echo ' ' . wpforo_print_size($this->wpforo->post_options['max_upload_size']); ?></p>
-							</div>
-						<?php endif; ?>
+	                    <?php if( $this->wpforo->perm->can_attach() ): ?>
+							<?php if(!defined('WPFOROATTACH_BASENAME') && $this->wpforo->perm->forum_can('a', $forumid)): ?>
+                                <div class="wpf-default-attachment">
+                                    <label for="file"><?php wpforo_phrase('Attach file:') ?> </label> <input id="file" type="file" name="attachfile" />
+                                    <p><?php wpforo_phrase('Maximum allowed file size is'); echo ' ' . wpforo_print_size($this->wpforo->post_options['max_upload_size']); ?></p>
+                                </div>
+                            <?php endif; ?>
+                        <?php endif; ?>
 	                </div>
 	                <?php if( wpforo_feature('subscribe_checkbox_on_post_editor', $this->wpforo) ) : 
 		                $args = array( "userid" => $this->wpforo->current_userid , "itemid" => intval($topicid), "type" => "topic" );
 		                $subscribe = $this->wpforo->sbscrb->get_subscribe( $args ); 
 	                	if( !isset($subscribe['subid']) ) : ?>
-	                		<div class="wpf-topic-sbs"><input id="wpf-topic-sbs" type="checkbox" name="wpforo_topic_subs" value="1" <?php echo ( wpforo_feature('subscribe_checkbox_default_status', $this->wpforo) ) ? 'checked="true" ' : ''; ?> />&nbsp;<label for="wpf-topic-sbs"><?php wpforo_phrase('Subscribe to this topic.') ?></label></div>
+	                		<div class="wpf-topic-sbs"><input id="wpf-topic-sbs" type="checkbox" name="wpforo_topic_subs" value="1" <?php echo ( wpforo_feature('subscribe_checkbox_default_status', $this->wpforo) ) ? 'checked="true" ' : ''; ?> />&nbsp;<label for="wpf-topic-sbs"><?php wpforo_phrase('Subscribe to this topic') ?></label></div>
 						<?php endif;
 					endif; ?>
-					<input id="formbutton" type="submit" name="post[save]" class="button button-primary forum_submit" value="<?php wpforo_phrase('Save') ?>">
+					<input id="formbutton" type="submit" name="post[save]" class="button button-primary forum_submit" value="<?php wpforo_phrase('Submit') ?>">
 	                <div class="wpf-clear"></div>
 				</form>
 			</div>
@@ -296,14 +300,14 @@ class wpForoTemplate{
 		
 		$button_html = array(); 
 		
-		$forumid = (int)$forum['forumid'];
-		$topicid = (int)$topic['topicid'];
-		$postid = (int)$post['postid'];
+		$forumid = (isset($forum['forumid'])) ? $forum['forumid'] : 0;
+		$topicid = (isset($topic['topicid'])) ? $topic['topicid'] : 0;
+		$postid = (isset($post['postid'])) ? $post['postid'] : 0;
 		
-		$is_sticky = $topic['type'];
-		$is_closed = $topic['closed'];
-		$is_private = $topic['private'];
-		$is_solved = $post['is_answer'];
+		$is_sticky = (isset($topic['type'])) ? $topic['type'] : 0;
+		$is_closed = (isset($topic['closed'])) ? $topic['closed'] : 0;
+		$is_private = (isset($topic['private'])) ? $topic['private'] : 0;
+		$is_solved = (isset($post['is_answer'])) ? $post['is_answer'] : 0;
 		
 		foreach($buttons as $button){
 			
@@ -386,19 +390,23 @@ class wpForoTemplate{
 				 	break; 
 				case 'edit':
 					if($is_closed) break;
-						$diff = current_time( 'timestamp', 1 ) - strtotime($post['created']);
-                        if( $this->wpforo->perm->forum_can( ($is_topic ? 'et' : 'er'), $forumid ) || ($this->wpforo->current_userid == $post['userid'] && $this->wpforo->perm->forum_can( ($is_topic ? 'eot' : 'eor' ), $forumid ) && $diff < $this->wpforo->post_options[($is_topic ? 'eot' : 'eor' ).'_durr'] ) ) {
-                            $a = ( $is_topic ) ? 'wpfedittopicpid' : ''; 
-                            $b = ( $is_topic ) ? $postid : $postid;
-                            $button_html[] = '<span id="'. esc_attr( $a . $b ) .'" class="wpforo-edit wpf-action"><i class="fa fa-edit fa-0x"></i>' . wpforo_phrase('Edit', false).'</span>';
-                        }
+						if( !$this->wpforo->member->current_user_is_new() ){
+							$diff = current_time( 'timestamp', 1 ) - strtotime($post['created']);
+							if( $this->wpforo->perm->forum_can( ($is_topic ? 'et' : 'er'), $forumid ) || ($this->wpforo->current_userid == $post['userid'] && $this->wpforo->perm->forum_can( ($is_topic ? 'eot' : 'eor' ), $forumid ) && $diff < $this->wpforo->post_options[($is_topic ? 'eot' : 'eor' ).'_durr'] ) ) {
+								$a = ( $is_topic ) ? 'wpfedittopicpid' : ''; 
+								$b = ( $is_topic ) ? $postid : $postid;
+								$button_html[] = '<span id="'. esc_attr( $a . $b ) .'" class="wpforo-edit wpf-action"><i class="fa fa-edit fa-0x"></i>' . wpforo_phrase('Edit', false).'</span>';
+							}
+						}
 				 	break; 
 				case 'delete':
-					$diff = current_time( 'timestamp', 1 ) - strtotime($post['created']);
-					if( $this->wpforo->perm->forum_can( ($is_topic ? 'dt' : 'dr' ), $forumid ) || ($this->wpforo->current_userid == $post['userid'] && $this->wpforo->perm->forum_can( ($is_topic ? 'dot' : 'dor' ), $forumid ) && $diff < $this->wpforo->post_options[($is_topic ? 'dot' : 'dor' ).'_durr']) ){
-						$a = ( $is_topic ) ? 'wpftopicdelete' : 'wpfreplydelete'; 
-						$b = ( $is_topic ) ? $topicid : $postid;
-						$button_html[] = '<span id="'. esc_attr( $a . $b ) .'" class="wpf-action wpforo-delete"><i class="fa fa-times fa-0x"></i>' . wpforo_phrase('Delete', false).'</span>';
+					if( !$this->wpforo->member->current_user_is_new() ){
+						$diff = current_time( 'timestamp', 1 ) - strtotime($post['created']);
+						if( $this->wpforo->perm->forum_can( ($is_topic ? 'dt' : 'dr' ), $forumid ) || ($this->wpforo->current_userid == $post['userid'] && $this->wpforo->perm->forum_can( ($is_topic ? 'dot' : 'dor' ), $forumid ) && $diff < $this->wpforo->post_options[($is_topic ? 'dot' : 'dor' ).'_durr']) ){
+							$a = ( $is_topic ) ? 'wpftopicdelete' : 'wpfreplydelete'; 
+							$b = ( $is_topic ) ? $topicid : $postid;
+							$button_html[] = '<span id="'. esc_attr( $a . $b ) .'" class="wpf-action wpforo-delete"><i class="fa fa-times fa-0x"></i>' . wpforo_phrase('Delete', false).'</span>';
+						}
 					}
 				 	break; 
 				case 'link':
@@ -629,6 +637,19 @@ class wpForoTemplate{
 		
 		$icon = array();
 		$status = false;
+		
+		if( isset($item['status']) && $item['status'] ){
+			$icon['class'] = 'fa-exclamation-circle';
+			$icon['color'] = 'wpfcl-5';
+			$icon['title'] = wpforo_phrase('Unapproved', false);
+			if($echo) { 
+				$status = true; echo ($data == 'icon') ? implode(' ', $icon) : $icon['title']; 
+			} 
+			else{ 
+				return ($data == 'icon') ? implode(' ', $icon) : $icon['title']; 
+			}
+		}
+		
 		if(isset($item['type'])){
 			
 			if( $type == 'topic' ){
@@ -749,57 +770,76 @@ class wpForoTemplate{
 		
 		if( $social_access ){
 			
-			$socnets['facebook']['set'] = $member['facebook'];
-			$member['facebook'] = ( strpos($member['facebook'], 'facebook.com') === FALSE ) ? 'https://www.facebook.com/' . trim($member['facebook'], '/') : $member['facebook'] ;
-			$socnets['facebook']['value'] = $member['facebook'];
-			$socnets['facebook']['protocol'] = 'https://';
-			$socnets['facebook']['title'] = wpforo_phrase('Facebook', false);
+			if( isset($member['facebook']) && $member['facebook'] ){
+				$socnets['facebook']['set'] = $member['facebook'];
+				$member['facebook'] = ( strpos($member['facebook'], 'facebook.com') === FALSE ) ? 'https://www.facebook.com/' . trim($member['facebook'], '/') : $member['facebook'] ;
+				$socnets['facebook']['value'] = $member['facebook'];
+				$socnets['facebook']['protocol'] = 'https://';
+				$socnets['facebook']['title'] = wpforo_phrase('Facebook', false);
+			}
 			
-			$socnets['twitter']['set'] = $member['twitter'];
-			$member['twitter'] = ( strpos($member['twitter'], 'twitter.com') === FALSE ) ? 'http://twitter.com/' . trim($member['twitter'], '/') : $member['twitter'] ;
-			$socnets['twitter']['value'] = $member['twitter'];
-			$socnets['twitter']['protocol'] = 'https://';
-			$socnets['twitter']['title'] = wpforo_phrase('Twitter', false);
+			if( isset($member['twitter']) && $member['twitter'] ){
+				$socnets['twitter']['set'] = $member['twitter'];
+				$member['twitter'] = ( strpos($member['twitter'], 'twitter.com') === FALSE ) ? 'http://twitter.com/' . trim($member['twitter'], '/') : $member['twitter'] ;
+				$socnets['twitter']['value'] = $member['twitter'];
+				$socnets['twitter']['protocol'] = 'https://';
+				$socnets['twitter']['title'] = wpforo_phrase('Twitter', false);
+			}
 			
-			$socnets['gtalk']['set'] = $member['gtalk'];
-			$socnets['gtalk']['value'] = $member['gtalk'];
-			$socnets['gtalk']['protocol'] = 'https://';
-			$socnets['gtalk']['title'] = wpforo_phrase('Google+', false);
+			if( isset($member['gtalk']) && $member['gtalk'] ){
+				$socnets['gtalk']['set'] = $member['gtalk'];
+				$socnets['gtalk']['value'] = $member['gtalk'];
+				$socnets['gtalk']['protocol'] = 'https://';
+				$socnets['gtalk']['title'] = wpforo_phrase('Google+', false);
+			}
 			
-			$socnets['yahoo']['set'] = $member['yahoo'];
-			$socnets['yahoo']['value'] = $member['yahoo'];
-			$socnets['yahoo']['protocol'] = 'mailto:';
-			$socnets['yahoo']['title'] = wpforo_phrase('Yahoo', false);
+			if( isset($member['yahoo']) && $member['yahoo'] ){
+				$socnets['yahoo']['set'] = $member['yahoo'];
+				$socnets['yahoo']['value'] = $member['yahoo'];
+				$socnets['yahoo']['protocol'] = 'mailto:';
+				$socnets['yahoo']['title'] = wpforo_phrase('Yahoo', false);
+			}
 			
-			$socnets['aim']['set'] = $member['aim'];
-			$socnets['aol']['value'] = $member['aim'];
-			$socnets['aol']['protocol'] = 'mailto:';
-			$socnets['aol']['title'] = wpforo_phrase('AOL IM', false);
+			if( isset($member['aim']) && $member['aim'] ){
+				$socnets['aim']['set'] = $member['aim'];
+				$socnets['aim']['value'] = $member['aim'];
+				$socnets['aim']['protocol'] = 'mailto:';
+				$socnets['aim']['title'] = wpforo_phrase('AOL IM', false);
+			}
 			
-			$socnets['icq']['set'] = $member['icq'];
-			$socnets['icq']['value'] = 'www.icq.com/whitepages/cmd.php?uin=' . $member['icq'] . '&action=message';
-			$socnets['icq']['protocol'] = 'https://';
-			$socnets['icq']['title'] = wpforo_phrase('ICQ', false);
+			if( isset($member['icq']) && $member['icq'] ){
+				$socnets['icq']['set'] = $member['icq'];
+				$socnets['icq']['value'] = 'www.icq.com/whitepages/cmd.php?uin=' . $member['icq'] . '&action=message';
+				$socnets['icq']['protocol'] = 'https://';
+				$socnets['icq']['title'] = wpforo_phrase('ICQ', false);
+			}
 			
-			$socnets['msn']['set'] = $member['msn'];
-			$socnets['msn']['value'] = $member['msn'];
-			$socnets['msn']['protocol'] = 'mailto:';
-			$socnets['msn']['title'] = wpforo_phrase('MSN', false);
+			if( isset($member['msn']) && $member['msn'] ){
+				$socnets['msn']['set'] = $member['msn'];
+				$socnets['msn']['value'] = $member['msn'];
+				$socnets['msn']['protocol'] = 'mailto:';
+				$socnets['msn']['title'] = wpforo_phrase('MSN', false);
+			}
 			
-			$socnets['skype']['set'] = $member['skype'];
-			$socnets['skype']['value'] = $member['skype'];
-			$socnets['skype']['protocol'] = 'skype:';
-			$socnets['skype']['title'] = wpforo_phrase('Skype', false);
+			if( isset($member['skype']) && $member['skype'] ){
+				$socnets['skype']['set'] = $member['skype'];
+				$socnets['skype']['value'] = $member['skype'];
+				$socnets['skype']['protocol'] = 'skype:';
+				$socnets['skype']['title'] = wpforo_phrase('Skype', false);
+			}
 			
 			?>
             <div class="wpf-member-socnet-wrap">
-				<?php foreach( $socnets as $key => $socnet ): $title = $member['display_name'] . ' - ' . $socnet['title']; ?>
-                	<?php if( !$socnet['set'] ) continue; ?>
-					<?php $url = ($key == 'skype') ? 'skype:' . esc_attr($socnet['value']) : esc_url($socnet['protocol'] . str_replace( array('https://', 'http://', 'skype:', 'mailto:'), '', $socnet['value'])); ?>
-                	<a href="<?php echo $url ?>" class="wpf-member-socnet-button" title="<?php echo esc_attr($title) ?>">
-                    	<img src="<?php echo esc_url(WPFORO_URL) ?>/wpf-assets/images/sn/<?php echo $key ?>.png" alt="<?php echo esc_attr($title) ?>" title="<?php echo esc_attr($title) ?>" />
-                    </a> 
-				<?php endforeach; ?>
+				<?php if(!empty($socnets)): ?>
+					<?php foreach( $socnets as $key => $socnet ): ?>
+                        <?php if( !$socnet['set'] ) continue; ?>
+                        <?php $title = $member['display_name'] . ' - ' . $socnet['title']; ?>
+                        <?php $url = ($key == 'skype') ? 'skype:' . esc_attr($socnet['value']) : esc_url($socnet['protocol'] . str_replace( array('https://', 'http://', 'skype:', 'mailto:'), '', $socnet['value'])); ?>
+                        <a href="<?php echo $url ?>" class="wpf-member-socnet-button" title="<?php echo esc_attr($title) ?>">
+                            <img src="<?php echo esc_url(WPFORO_URL) ?>/wpf-assets/images/sn/<?php echo $key ?>.png" alt="<?php echo esc_attr($title) ?>" title="<?php echo esc_attr($title) ?>" />
+                        </a> 
+                    <?php endforeach; ?>
+                <?php endif; ?>
             	<?php do_action( 'wpforo_member_socnet_buttons', $member ); ?>
             </div>
 			<?php

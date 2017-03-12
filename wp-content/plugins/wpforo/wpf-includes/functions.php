@@ -261,6 +261,9 @@ function wpforo_create_form_table($varname, $primary_key, $fields = array(), $se
 		}
 		
 		$items_count = 0;
+		if( $varname == 'member' && !isset($_GET['member_status']) ){ 
+			$args['status'] = array('active');
+		}
 		
 		$items = $wpforo->$varname->$func($args, $items_count);
 		
@@ -305,12 +308,37 @@ function wpforo_create_form_table($varname, $primary_key, $fields = array(), $se
         
 		<div class="wpforo-search-box">
             <form name="search" id="srch" action="<?php echo admin_url( 'admin.php' ) ?>" method="GET">
-                <input type="hidden" name="page" value="wpforo-<?php echo esc_attr($varname); ?>s"/>
-                    <label class="screen-reader-text" for="post-search-input">Search <?php echo esc_attr(ucfirst($varname)); ?>s:</label>
-                    <input type="search" id="post-search-input" name="s" value="<?php echo ( isset($_GET['s']) ? esc_attr(sanitize_text_field($_GET['s'])) : '' ) ?>">
-                    <input type="submit" name="" id="search-submit" class="button" value="Search <?php echo esc_attr(ucfirst($varname)); ?>s">
+                <?php if( !empty($_GET) ) : ?>
+                    <?php foreach ($_GET as $get_key => $get) : ?>
+                        <input type="hidden" name="<?php echo $get_key ?>" value="<?php echo $get ?>"/>
+                    <?php endforeach ?>
+                <?php endif ?>
+                <label class="screen-reader-text" for="post-search-input">Search <?php echo esc_attr(ucfirst($varname)); ?>s:</label>
+                <input type="search" id="post-search-input" name="s" value="<?php echo ( isset($_GET['s']) ? esc_attr(sanitize_text_field($_GET['s'])) : '' ) ?>">
+                <input type="submit" name="" id="search-submit" class="button" value="Search <?php echo esc_attr(ucfirst($varname)); ?>s">
             </form>
 		</div>
+        <?php if($varname == 'moderation'): ?> 
+			<?php 
+			$total = $wpforo->post->get_count(); 
+			$up_total = (!isset($_GET['filter_by_status']) || (isset($_GET['filter_by_status']) && $_GET['filter_by_status'] == 1 )) ? $items_count : ($total - $items_count); 
+            $ap_total = ((isset($_GET['filter_by_status']) && $_GET['filter_by_status'] == 0 )) ? $items_count : ($total - $items_count); 
+			?>
+            <ul class="subsubsub" style="margin:-25px 0px 5px 0px;">
+                <li><a href="<?php echo admin_url( 'admin.php' ) ?>?page=wpforo-moderations&filter_by_status=1" <?php if( !isset($_GET['filter_by_status']) || (isset($_GET['filter_by_status']) && $_GET['filter_by_status'] == 1 ) ) echo 'class="current"' ?>><?php _e('Unapproved', 'wpforo'); ?> <span class="count">(<?php echo intval($up_total); ?>)</span></a> |</li>
+                <li><a href="<?php echo admin_url( 'admin.php' ) ?>?page=wpforo-moderations&filter_by_status=0" <?php if( (isset($_GET['filter_by_status']) && $_GET['filter_by_status'] == 0 ) ) echo 'class="current"' ?>><?php _e('Published', 'wpforo'); ?> <span class="count">(<?php echo intval($ap_total); ?>)</span></a></li>
+            </ul>
+        <?php elseif($varname == 'member' && (!isset($_GET['groupid']) || (isset($_GET['groupid']) && !$_GET['groupid'])) ): ?> 
+			<?php 
+			$total = $wpforo->member->get_count(); 
+			$up_total = (!isset($_GET['member_status']) || (isset($_GET['member_status']) && $_GET['member_status'] == 'active' )) ? $items_count : ($total - $items_count); 
+            $ap_total = ((isset($_GET['member_status']) && $_GET['member_status'] == 'banned' )) ? $items_count : ($total - $items_count); 
+			?>
+            <ul class="subsubsub" style="margin:-25px 0px 5px 0px;">
+                <li><a href="<?php echo admin_url( 'admin.php' ) ?>?page=wpforo-members&member_status=active" <?php if( !isset($_GET['member_status']) || (isset($_GET['member_status']) && $_GET['member_status'] == 'active' ) ) echo 'class="current"' ?>><?php _e('Active', 'wpforo'); ?> <span class="count">(<?php echo intval($up_total); ?>)</span></a> |</li>
+                <li><a href="<?php echo admin_url( 'admin.php' ) ?>?page=wpforo-members&member_status=banned" <?php if( (isset($_GET['member_status']) && $_GET['member_status'] == 'banned' ) ) echo 'class="current"' ?>><?php _e('Banned', 'wpforo'); ?> <span class="count">(<?php echo intval($ap_total); ?>)</span></a></li>
+            </ul>
+        <?php endif; ?>
         
 		<form name="items" id="items" action="<?php echo admin_url( 'admin.php' ) ?>" method="GET">
 			<?php wp_nonce_field( 'bulk_action_'.$varname ); ?>
@@ -338,13 +366,13 @@ function wpforo_create_form_table($varname, $primary_key, $fields = array(), $se
 									<option value="0"><?php _e('Show all forums', 'wpforo'); ?></option>
 									<?php $wpforo->forum->tree('select_box'); ?>
 								</select>
-								
+
 							<?php }elseif($filter_field == 'langid'){ ?>
 								
 								<select name="<?php echo esc_attr($filter_field) ?>">
 									<?php  $wpforo->phrase->show_lang_list() ?>
 								</select>
-								
+
 							<?php }elseif($filter_field == 'groupid'){ ?>
 								
 								<select name="<?php echo esc_attr($filter_field) ?>">
@@ -387,8 +415,37 @@ function wpforo_create_form_table($varname, $primary_key, $fields = array(), $se
 									<?php
 								}
 								
+							}elseif( $varname == 'moderation' ){
+                                $filter_by_status = intval( ( isset($_GET['filter_by_status']) ? $_GET['filter_by_status'] : 1 ) );
+
+							    if($filter_field == 'status'){
+                                    if( $statuses = $wpforo->moderation->post_statuses ) :  ?>
+                                        <select name="filter_by_status">
+
+                                            <?php  foreach ($statuses as $key => $status) : ?>
+                                                <option value="<?php echo esc_attr($key) ?>" <?php echo ( $filter_by_status == $key ? 'selected' : '' ) ?>><?php echo esc_html( $status ) ?></option>
+                                            <?php endforeach; ?>
+
+                                        </select>
+                                        <?php
+                                    endif;
+                                }elseif($filter_field == 'userid'){
+							        $sql = "SELECT DISTINCT `userid` FROM `".$wpforo->db->prefix."wpforo_posts` WHERE `status` = $filter_by_status";
+							        if( $userids = $wpforo->db->get_col($sql) ) :  ?>
+                                            <select name="filter_by_userid">
+                                                <option value="0"><?php _e('filter by user', 'wpforo') ?></option>
+
+                                                <?php  foreach ($userids as $userid) : $user = $wpforo->member->get_member($userid); ?>
+                                                    <option value="<?php echo esc_attr($userid) ?>" <?php echo ( isset($_GET['filter_by_userid']) && $_GET['filter_by_userid'] == $userid ? 'selected' : '' ) ?>><?php echo esc_html( wpforo_make_dname($user['display_name'], $user['user_nicename']) ) ?></option>
+                                                <?php endforeach; ?>
+
+                                            </select>
+                                        <?php
+                                    endif;
+                                }
+
 							} ?>
-							
+
 						<?php endforeach; ?>
 						
 						<input type="submit" name="" id="post-query-submit" class="button" value="Filter">
@@ -434,7 +491,7 @@ function wpforo_create_form_table($varname, $primary_key, $fields = array(), $se
 						<?php foreach($fields as $key => $field) : ?>
 							<th scope="col" <?php if($key===0) echo ' style="width:30%"' ?> id="<?php echo esc_attr(sanitize_text_field($field)) ?>" class="manage-column column-<?php echo esc_attr(sanitize_text_field($field)) ?> <?php echo isset($_GET['order']) ? ($_GET['orderby'] == $field ? 'sorted ' : '') . $_GET['order'] : 'sortable asc' ?>">
 								<a href="<?php echo esc_url(preg_replace('#(\&*orderby\=[^\&]*\&*order\=[^\&]*)#is', '', wpforo_get_request_uri())); ?>&orderby=<?php echo esc_attr(sanitize_text_field($field)) ?>&order=<?php echo isset($_GET['order']) ? ( $_GET['order'] == 'asc' ? 'desc' : 'asc' ) : 'asc' ?>">
-									<span><?php echo sanitize_text_field(str_replace('_', ' ', wpforo_phrase( $field, false ))) ?></span>
+									<span><?php if($field == 'is_first_post'){ _e('Type', 'wpforo'); }else{ echo sanitize_text_field(str_replace('_', ' ', wpforo_phrase( $field, false ))); } ?></span>
 									<span class="sorting-indicator"></span>
 								</a>
 							</th>
@@ -450,7 +507,7 @@ function wpforo_create_form_table($varname, $primary_key, $fields = array(), $se
 						<?php foreach($fields as $key => $field) : ?>
 							<th scope="col" <?php if($key===0) echo ' style="width:30%"' ?> id="<?php echo esc_attr($field) ?>" class="manage-column column-<?php echo esc_attr($field) ?> <?php echo isset($_GET['order']) ? ($_GET['orderby'] == $field ? 'sorted ' : '') . $_GET['order'] : 'sortable asc' ?>">
 								<a href="<?php echo admin_url( 'admin.php?page=wpforo-' . esc_attr(sanitize_text_field($varname)) . 's&orderby=' . esc_attr(sanitize_text_field($field)) . '&order=' . ( isset($_GET['order']) ? ( $_GET['order'] == 'asc' ? 'desc' : 'asc' ) : 'asc' ) ) ?>">
-									<span><?php echo esc_html(sanitize_text_field(str_replace('_', ' ', wpforo_phrase( $field, false )))) ?></span>
+                                    <span><?php if($field == 'is_first_post'){ _e('Type', 'wpforo'); }else{ echo sanitize_text_field(str_replace('_', ' ', wpforo_phrase( $field, false ))); } ?></span>
 									<span class="sorting-indicator"></span>
 								</a>
 							</th>
@@ -480,7 +537,9 @@ function wpforo_create_form_table($varname, $primary_key, $fields = array(), $se
 												if($varname == 'member'){
 													$url = $url_user = admin_url( 'user-edit.php?user_id=' . intval($item[$primary_key]));
 													$url_profile = $wpforo->$varname->get_profile_url($item[$primary_key], 'account');
-												}else{
+												}elseif($varname == 'moderation'){
+                                                    $url = $wpforo->post->get_post_url($item[$primary_key]);
+                                                }else{
 													$url = admin_url( 'admin.php?page=wpforo-'. $varname .'s&id='.$item[$primary_key] .'&action=edit' );
 												}
 											?>
@@ -522,6 +581,11 @@ function wpforo_create_form_table($varname, $primary_key, $fields = array(), $se
 																<span class="trash"><a class="submitdelete" title="<?php _e('Delete this item', 'wpforo') ?>" onclick="return confirm('<?php _e('Are you sure you whant to DELETE this item?', 'wpforo') ?>');" href="<?php echo esc_url($delete_url); ?>"><?php _e('delete', 'wpforo'); ?></a></span>
 																<?php if( $act_key != ( count($actions) - 1 ) ) echo "&nbsp;|&nbsp;"; ?>
 															<?php break;
+															case 'approve': ?>
+                                                            	<?php $approve_url = wp_nonce_url( admin_url( 'admin.php?page=wpforo-' . esc_attr(sanitize_text_field($varname)) . 's&id=' . intval($item[$primary_key]) . '&action='.( !$item['status'] ? 'un' : '' ).'approve' ), 'wpforo_admin_table_action_approve' ); ?>
+																<span class="vim-u"><a class="vim-u" title="<?php echo ( !$item['status'] ? __('unapprove this item', 'wpforo') : __('Approve this item', 'wpforo') ) ?>" href="<?php echo esc_url($approve_url); ?>"><?php echo ( !$item['status'] ? __('unapprove', 'wpforo') : __('approve', 'wpforo') ); ?></a></span>
+																<?php if( $act_key != ( count($actions) - 1 ) ) echo "&nbsp;|&nbsp;"; ?>
+															<?php break;
 															case 'user_delete': if($item['userid'] == $wpforo->current_userid) break; ?>
                                                             	<?php $delete_url = wp_nonce_url( "users.php?action=delete&user=".intval($item[$primary_key]), 'bulk-users' ) ?>
 																<span class="trash"><a class="submitdelete" title="<?php _e('Delete this item', 'wpforo') ?>" onclick="return confirm('<?php _e('Are you sure you whant to DELETE this item?', 'wpforo') ?>');" href="<?php echo esc_url($delete_url); ?>"><?php _e('delete', 'wpforo'); ?></a></span>
@@ -529,16 +593,19 @@ function wpforo_create_form_table($varname, $primary_key, $fields = array(), $se
 															<?php break; 
 															case 'view': ?>
 																<?php
-																	if($varname != 'member'){
-																		$fn_name = "get_".$varname."_url";
-																		$item_id = $item[$varname.'id'];
-																	}else{
-																		$fn_name = "get_profile_url";
-																		$item_id = $item['ID'];
-																	}
+																	if( $varname == 'member' ){
+                                                                        $fn_name = "get_profile_url";
+                                                                        $item_id = $item['ID'];
+                                                                    }elseif($varname == 'moderation'){
+                                                                        $fn_name = "get_view_url";
+                                                                        $item_id = $item['postid'];
+                                                                    }else{
+                                                                        $fn_name = "get_".$varname."_url";
+                                                                        $item_id = $item[$varname.'id'];
+                                                                    }
 																?>
 																<span class="view">
-																	<a href="<?php echo esc_url($wpforo->$varname->$fn_name($item_id)) ?>" title="<?php echo esc_attr( __('view', 'wpforo')); ?> “<?php echo esc_attr($varname) ?>”" rel="permalink">
+																	<a href="<?php echo esc_url($wpforo->$varname->$fn_name($item_id)) ?>" target="_blank" title="<?php echo esc_attr( __('view', 'wpforo')); ?> “<?php echo esc_attr($varname) ?>”" rel="permalink">
 																		<?php _e('view', 'wpforo'); ?>
 																	</a>
 																</span>
@@ -553,12 +620,14 @@ function wpforo_create_form_table($varname, $primary_key, $fields = array(), $se
 												<?php if($field == 'forumid') : ?>
 													<?php $data = $wpforo->forum->get_forum($item[$field]); echo esc_html($data['title']); ?>
 												<?php elseif($field == 'userid') : ?>
-													<?php $data = $wpforo->member->get_member($item[$field]); echo esc_html($data['user_login']); ?>
+													<?php $data = $wpforo->member->get_member($item[$field]); echo esc_html(wpforo_make_dname($data['display_name'], $data['user_nicename'])); ?>
 												<?php elseif($field == 'groupid') : ?>
 													<?php $data = $wpforo->usergroup->get_usergroup($item[$field]); echo esc_html($data['name']); ?>
 												<?php elseif($field == 'rank') : ?>
 													 <div class="author-rating"><div class="bar wpfw-<?php echo esc_attr($wpforo->member->rating_level($item['posts']));  ?> wpfbg-4"></div></div>
-												<?php else : ?>
+                                                <?php elseif($field == 'is_first_post') : ?>
+													<b><?php echo strtoupper( ( $item[$field] ? __('Topic', 'wpforo') : __('Post', 'wpforo') ) ) ?></b>
+                                                <?php else : ?>
 													<?php wpfo($item[$field], true, 'esc_html') ?>
 												<?php endif; ?>
 											</td>
@@ -720,6 +789,25 @@ function wpforo_admin_options_tabs( $tabs, $current = 'general', $subtab = FALSE
 	}
 }
 
+function wpforo_admin_tools_tabs( $tabs, $current = 'antispam', $subtab = FALSE, $sub_current = 'antispam' ) {
+    if(!empty($tabs)){
+    	$class_attr = $subtab ? 'vert_tab' : '';
+	    echo '<h2 class="nav-tab-wrapper ' . esc_attr($class_attr) . '">';
+	    foreach( $tabs as $tab => $name ){
+	        $class = ( $tab == $current || ($subtab && $tab == $sub_current ) ) ? ' nav-tab-active' : '';
+	        $sub = $subtab ? '&subtab='.esc_attr($tab) : '';
+			$class = esc_attr($class);
+			$class_attr = $class_attr;
+			$current = esc_attr($current);
+			$tab =  esc_attr($tab);
+			$sub =  esc_attr($sub);
+			$name = esc_html($name);
+	        echo "<a class='nav-tab$class $class_attr' href='?page=wpforo-tools&tab=". ($subtab ? $current : $tab ) ."$sub' style='float:left'>$name</a>";
+	    }
+	    echo '</h2>';
+	}
+}
+
 function wpforo_content_filter( $content ){
 	$content = apply_filters('wpforo_body_text_filter', $content);
 	$content = preg_replace('#([^\'\"]|^)(https?://[^\s\'\"<>]+\.(?:jpg|jpeg|png|gif|ico|svg|bmp|tiff))([^\'\"]|$)#isu', '$1 <a class="wpforo-auto-embeded-link" href="$2" target="_blank"><img class="wpforo-auto-embeded-image" src="$2"/></a> $3', $content);
@@ -734,6 +822,10 @@ function wpforo_content_filter( $content ){
 	$content = preg_replace('#(<a[^<>]*>[^<>]*)<a[^<>]*class=[\'"]wpforo-auto-embeded-link[\'"][^<>]*href=[\'"]([^\'"]*)[\'"][^<>]*>[^<>]*</a>([^<>]*</a>)#isu', '$1$2$3', $content);
 	$content = apply_filters('wpforo_content_filter', $content);
 	return wpautop($content);
+}
+
+function wpforo_remove_links( $content ){
+	return preg_replace('#([^\'\"]|^)(https?://[^\s\'\"<>]+)([^\'\"]|$)#isu', '$1 [' . wpforo_phrase('removed link', false) . '] $3', $content);
 }
 
 add_filter('wpforo_content_filter', 'wpforo_nofollow_tag', 20);
@@ -845,7 +937,7 @@ function wpfo_check( $option = '', $value = '', $type = 'checked' , $echo = true
 }
 
 function wpforo_human_filesize($bytes, $decimals = 2) {
-    $size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+    $size = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
     $factor = floor((strlen($bytes) - 1) / 3);
     return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . '&nbsp;' . @$size[$factor];
 }
@@ -1380,9 +1472,8 @@ function wpforo_db_check( $args = array() ){
 	$col = esc_sql(trim($args['col']));
 	$table = esc_sql(trim($args['table']));
 	
-	if( $check == 'default_value' ){
-		$col = $wpdb->get_row("SHOW COLUMNS FROM `" . $table . "` LIKE '" . $col . "';", ARRAY_A);
-		return $col['Default'];
+	if( $check == 'table_exists' ){
+		return $wpdb->get_var("SHOW TABLES LIKE '" . $table . "';");
 	}
 	
 	if( $check == 'col_exists' ){
@@ -1392,6 +1483,11 @@ function wpforo_db_check( $args = array() ){
 	if( $check == 'key_exists' ){
 		$col = $wpdb->get_row("SHOW COLUMNS FROM `" . $table . "` LIKE '" . $col . "';", ARRAY_A);
 		return $col['Key'];
+	}
+	
+	if( $check == 'default_value' ){
+		$col = $wpdb->get_row("SHOW COLUMNS FROM `" . $table . "` LIKE '" . $col . "';", ARRAY_A);
+		return $col['Default'];
 	}
 	
 	if( $check == 'col_type' ){
@@ -1415,5 +1511,15 @@ function wpforo_make_dname($display_name, $user_nicename){
 	$user_nicename = trim($user_nicename);
 	return ( $display_name ? esc_html($display_name) : esc_html(urldecode($user_nicename)) );
 }
-	
+
+function wpfor_strlen( $string ){
+	if(!$string) return 0;
+	if(function_exists('mb_strlen')){
+		return mb_strlen($string);
+	}
+	else{
+		return strlen($string);
+	}
+}
+
 ?>

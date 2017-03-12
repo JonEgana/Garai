@@ -7,7 +7,7 @@
 <div id="wpf-admin-wrap" class="wrap" style="margin-top: 0px">
 	<?php wpforo_screen_option() ?>
 	<div id="icon-users" class="icon32"><br></div>
-	<h2 style="padding:30px 0px 0px 0px;line-height: 20px;"><?php _e('Front-end Phrases', 'wpforo'); ?> &nbsp;<a href="<?php echo admin_url( 'admin.php?page=wpforo-phrases&action=add' ) ?>" class="add-new-h2"><?php wpforo_phrase('add_new') ?></a></h2>
+	<h2 style="padding:30px 0px 0px 0px;line-height: 20px; margin-bottom:15px;"><?php _e('Front-end Phrases', 'wpforo'); ?> &nbsp;<a href="<?php echo admin_url( 'admin.php?page=wpforo-phrases&action=add' ) ?>" class="add-new-h2"><?php wpforo_phrase('add_new') ?></a></h2>
 	<?php $wpforo->notice->show(FALSE) ?>
 	<?php
 		if( !((isset($_GET['action']) && $_GET['action'] != '-1') || (isset($_GET['action2']) && $_GET['action2'] != '-1')) ){

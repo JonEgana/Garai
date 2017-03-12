@@ -3,7 +3,7 @@
 	Plugin name: Calendar Event
 	Plugin URI: http://total-soft.pe.hu/
 	Description: Event Calendar plugin created for showing your events. Total-Soft Calendar is the best if you want to be original on your website.
-	Version: 1.1.7
+	Version: 1.1.8
 	Author: Total-Soft
 	Author URI: http://total-soft.pe.hu/
 	License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html

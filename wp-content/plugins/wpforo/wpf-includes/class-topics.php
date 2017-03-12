@@ -29,6 +29,8 @@ class wpForoTopic{
 			$args['body'] = $_REQUEST['postbody']; 
 		}
 		
+		if( !isset($args['body']) || !$args['body'] ){ $this->wpforo->notice->add('Post is empty', 'error'); return FALSE; }
+		
 		if( !isset($args['forumid']) || !$args['forumid'] = intval($args['forumid']) ){
 			$this->wpforo->notice->add('Add Topic error: No forum selected', 'error');
 			return FALSE;
@@ -44,6 +46,8 @@ class wpForoTopic{
 			return FALSE;
 		}
 		
+		do_action( 'wpforo_start_add_topic', $args );
+		
 		$args['title'] = wpforo_text($args['title'], 250, false);
 		$args['body'] = (isset($args['body']) ? preg_replace('#</pre>[\r\n\t\s\0]*<pre>#isu', "\r\n", $args['body']) : '' );
 		$args['slug'] = (isset($args['slug']) && $args['slug']) ? sanitize_title($args['slug']) : ((isset($args['title'])) ? sanitize_title($args['title']) : md5(time()));
@@ -52,6 +56,7 @@ class wpForoTopic{
 		$args['userid'] = (isset($args['userid']) ? intval($args['userid']) : $this->wpforo->current_userid );
 		
 		$args = apply_filters('wpforo_add_topic_data_filter', $args);
+		
 		if(empty($args)) return FALSE;
 		
 		extract($args, EXTR_OVERWRITE);
@@ -62,6 +67,7 @@ class wpForoTopic{
 		if(isset($created)) $created = sanitize_text_field($created);
 		if(isset($userid)) $userid = intval($userid);
 		if(isset($type)) $type = intval($type);
+		if(isset($status)) $status = intval($status);
 		if(isset($private)) $private = intval($private);
 		if(isset($meta_key)) $meta_key = sanitize_text_field($meta_key);
 		if(isset($meta_desc)) $meta_desc = sanitize_text_field($meta_desc);
@@ -81,6 +87,7 @@ class wpForoTopic{
 					'forumid'	=> $forumid, 
 					'userid' 	=> $userid,
 					'type'		=> (isset($type) ? 1 : 0),
+					'status'	=> (isset($status) ? $status : 0),
 					'private'	=> (isset($private) ? 1 : 0),
 					'created'	=> $created,
 					'modified'	=> $created,
@@ -91,7 +98,7 @@ class wpForoTopic{
 					'meta_desc' => $meta_desc, 
 					'has_attach'=> $has_attach
 				), 
-				array('%s','%s','%d','%d','%d','%d','%s','%s','%d','%d','%d','%s','%s','%d')
+				array('%s','%s','%d','%d','%d','%d','%d','%s','%s','%d','%d','%d','%s','%s','%d')
 			)
 		){
 			$topicid = $this->wpforo->db->insert_id;
@@ -106,9 +113,10 @@ class wpForoTopic{
 						'body'      => stripslashes($body), 
 						'created'	=> $created,
 						'modified'	=> $created,
-						'is_first_post' => 1
+						'is_first_post' => 1,
+						'status'	=> (isset($status) ? $status : 0),
 					), 
-					array('%d','%d','%d','%s','%s','%s','%s','%d')
+					array('%d','%d','%d','%s','%s','%s','%s','%d','%d')
 				)
 			){
 				$first_postid = $this->wpforo->db->insert_id;
@@ -145,9 +153,20 @@ class wpForoTopic{
 	}
 	
 	public function edit( $args = array() ){
+		
 		if( empty($args) && empty($_REQUEST['topic']) ) return FALSE;
-		if( !isset($args['topicid']) && isset($_GET['id']) ) $args['topicid'] = $_GET['id'];
+		if( !isset($args['topicid']) && isset($_GET['id']) ) $args['topicid'] = intval($_GET['id']);
 		if( empty($args) && !empty($_REQUEST['topic']) ){ $args = $_REQUEST['topic']; $args['body'] = $_REQUEST['postbody']; }
+		
+		do_action( 'wpforo_start_edit_topic', $args );
+		
+		if( !$topic = $this->get_topic( $args['topicid'] ) ){
+			$this->wpforo->notice->add('Topic not found.', 'error');
+			return FALSE;
+		}
+		
+		$args['status'] = $topic['status'];
+		$args['userid'] = $topic['userid'];
 		
 		$args = apply_filters('wpforo_edit_topic_data_filter', $args);
 		if(empty($args)) return FALSE;
@@ -161,6 +180,7 @@ class wpForoTopic{
 		if(isset($created)) $created = sanitize_text_field($created);
 		if(isset($userid)) $userid = intval($userid);
 		if(isset($type)) $type = intval($type);
+		if(isset($status)) $status = intval($status);
 		if(isset($private)) $private = intval($private);
 		if(isset($meta_key)) $meta_key = sanitize_text_field($meta_key);
 		if(isset($meta_desc)) $meta_desc = sanitize_text_field($meta_desc);
@@ -180,10 +200,6 @@ class wpForoTopic{
 		$title = wpforo_text($title, 250, false);
 		if(isset($body)) $body = preg_replace('#</pre>[\r\n\t\s\0]*<pre>#isu', "\r\n", $body);
 		
-		if( !$topic = $this->get_topic($topicid) ){
-			$this->wpforo->notice->add('Topic not found.', 'error');
-			return FALSE;
-		}
 		$diff = current_time( 'timestamp', 1 ) - strtotime($topic['created']);
 		if( !($this->wpforo->perm->forum_can('et', $topic['forumid']) || ($this->wpforo->current_userid == $topic['userid'] && $this->wpforo->perm->forum_can('eot', $topic['forumid']) && $diff < $this->wpforo->post_options['eot_durr'])) ){
 			$this->wpforo->notice->add('You have no permission to edit this topic', 'error');
@@ -193,25 +209,38 @@ class wpForoTopic{
 		$t_update = $this->wpforo->db->update(
 			$this->wpforo->db->prefix."wpforo_topics",
 			array( 
-				'title' => stripslashes($title),
+				'title' => ( isset($title) ? stripslashes($title) : stripslashes($topic['title']) ),
 				'type'  => ( isset($type) ? $type : intval($topic['type']) ),
+				'status'  => ( isset($status) ? $status : intval($topic['status']) ),
 				'private'  => ( isset($private) ? $private : intval($topic['private']) ),
-				'has_attach'=> (strpos($body, '[attach]') !== FALSE ? 1 : 0)
+				'has_attach'=> ( isset($body) ? (strpos($body, '[attach]') !== FALSE ? 1 : 0) : $topic['has_attach'] )
 			), 
 			array( 'topicid' => intval($topicid) ),
-			array( '%s','%d','%d','%d' ), 
+			array( '%s','%d','%d','%d','%d' ), 
 			array( '%d' ) 
 		);
+		
+		if( isset($topic['first_postid']) ){
+			if( !$post = $this->wpforo->post->get_post( $topic['first_postid'] ) ){
+				$this->wpforo->notice->add('Topic first post data not found.', 'error');
+				return FALSE;
+			}
+		}
+		else{
+			$this->wpforo->notice->add('Topic first post not found.', 'error');
+			return FALSE;
+		}
 		
 		$p_update = $this->wpforo->db->update(
 			$this->wpforo->db->prefix."wpforo_posts",
 			array( 
-				'title' => stripslashes($title),
-				'body'    => stripslashes($body),
+				'title' => ( isset($title) ? stripslashes($title) : stripslashes($post['title']) ),
+				'body'  => ( (isset($body) && $body) ? stripslashes($body) : stripslashes($post['body']) ),
 				'modified'	=> current_time( 'mysql', 1 ),
-			), 
+                'status'  => ( isset($status) ? $status : intval($topic['status']) ),
+            ),
 			array( 'postid' => intval($topic['first_postid']) ),
-			array( '%s', '%s', '%s' ), 
+			array( '%s', '%s', '%s', '%d' ),
 			array( '%d' ) 
 		);
 		
@@ -272,9 +301,9 @@ class wpForoTopic{
 	function delete($topicid = 0){
 		if(!$topicid && isset( $_REQUEST['id'] ) ) $topicid = intval($_REQUEST['id']);
 		
-		$topic = $this->get_topic($topicid);
+		if( !$topic = $this->get_topic($topicid) ) return true;
 		$diff = current_time( 'timestamp', 1 ) - strtotime($topic['created']);
-		if( !($this->wpforo->perm->forum_can('dt', $post['forumid']) || ($this->wpforo->current_userid == $topic['userid'] && $this->wpforo->perm->forum_can('dot', $post['forumid']) && $diff < $this->wpforo->post_options['dot_durr'])) ){
+		if( !($this->wpforo->perm->forum_can('dt', $topic['forumid']) || ($this->wpforo->current_userid == $topic['userid'] && $this->wpforo->perm->forum_can('dot', $topic['forumid']) && $diff < $this->wpforo->post_options['dot_durr'])) ){
 			$this->wpforo->notice->add('You haven\'t permission to delete topic from this forum', 'error');
 			return FALSE;
 		}
@@ -300,6 +329,10 @@ class wpForoTopic{
 					);
 				}
 				
+				//Find and delete default atatchments before deleting post
+				$this->delete_attachments( $topicid );
+				
+				//Delete post
 				$posts_count = $this->wpforo->db->delete($this->wpforo->db->prefix . 'wpforo_posts',  array( 'topicid' => $topicid));
 				if($this->wpforo->db->delete($this->wpforo->db->prefix . 'wpforo_topics', array( 'topicid' => $topicid))){
 					$this->wpforo->db->delete(
@@ -437,6 +470,12 @@ class wpForoTopic{
 				}
 			}
 			
+			if( isset($topic['status']) && $topic['status'] && !wpforo_is_owner($topic['userid'])){
+				if( isset($topic['forumid']) && $topic['forumid'] && !$this->wpforo->perm->forum_can('au', $topic['forumid']) ){
+					return array();
+				}
+			}
+			
 			if($cache){
 				self::$cache['topic'][addslashes($topic['slug'])] = $topic;
 				return self::$cache['topic'][$topic['topicid']] = $topic;
@@ -465,6 +504,7 @@ class wpForoTopic{
 		  'forumid' => NULL,
 		  'userid'		=> NULL,		// user id in DB
 		  'type'		=> 0, 			//0, 1, etc . . .
+		  'status'		=> NULL, 			//0, 1, etc . . .
 		  'private'		=> NULL, 			//0, 1, etc . . .
 		  'orderby'		=> 'type, topicid', 	// type, topicid, modified, created
 		  'order'		=> 'DESC', 		// ASC DESC
@@ -498,7 +538,7 @@ class wpForoTopic{
 			}
 			
 			if( isset($forumid) && $forumid ){
-				if( $forumid && $this->wpforo->perm->forum_can('vp', $forumid) ){
+				if( $this->wpforo->perm->forum_can('vp', $forumid) ){
 					if(!is_null($private)) $wheres[] = " `private` = " . intval($private);
 				}
 				elseif( isset($this->wpforo->current_userid) && $this->wpforo->current_userid ){
@@ -506,6 +546,18 @@ class wpForoTopic{
 				}
 				else{
 					$wheres[] = " `private` = 0";
+				}
+			}
+			
+			if( isset($forumid) && $forumid ){
+				if( $this->wpforo->perm->forum_can('au', $forumid) ){
+					if(!is_null($status)) $wheres[] = " `status` = " . intval($status);
+				}
+				elseif( isset($this->wpforo->current_userid) && $this->wpforo->current_userid ){
+					$wheres[] = " ( `status` = 0 OR (`status` = 1 AND `userid` = " .intval($this->wpforo->current_userid). ") )";
+				}
+				else{
+					$wheres[] = " `status` = 0";
 				}
 			}
 			
@@ -530,11 +582,13 @@ class wpForoTopic{
 			if(!empty($forumids) || !$forumid){
 				$topics = $this->wpforo->db->get_results($sql, ARRAY_A);
 				foreach($topics as $key => $topic){
-					if( !$this->wpforo->perm->forum_can('vf', $topic['forumid']) ){
-						unset($topics[$key]);
-					}
 					if( isset($topic['private']) && $topic['private'] && !wpforo_is_owner($topic['userid']) ){
 						if( !$this->wpforo->perm->forum_can('vp', $topic['forumid']) ){
+							unset($topics[$key]);
+						}
+					}
+					if( isset($topic['status']) && $topic['status'] && !wpforo_is_owner($topic['userid']) ){
+						if( !$this->wpforo->perm->forum_can('au', $topic['forumid']) ){
 							unset($topics[$key]);
 						}
 					}
@@ -613,6 +667,12 @@ class wpForoTopic{
 	function is_private( $topicid ){
 		$private = $this->wpforo->db->get_var( "SELECT `private` FROM " . $this->wpforo->db->prefix."wpforo_topics WHERE `topicid` = " . intval($topicid) );
 		if( $private == 1 ) return TRUE;
+		return FALSE;
+	}
+	
+	function is_unapproved( $topicid ){
+		$status = $this->wpforo->db->get_var( "SELECT `status` FROM " . $this->wpforo->db->prefix."wpforo_topics WHERE `topicid` = " . intval($topicid) );
+		if( $status == 1 ) return TRUE;
 		return FALSE;
 	}
 	
@@ -702,7 +762,42 @@ class wpForoTopic{
 	function get_count(){
 		return $this->wpforo->db->get_var( "SELECT COUNT(`topicid`) FROM `".$this->wpforo->db->prefix."wpforo_topics`" );
 	}
+
+    public function status( $topicid, $status ){
+        if( !$topicid = wpforo_bigintval($topicid) ) return false;
+
+        if( false !== $this->wpforo->db->update(
+                $this->wpforo->db->prefix."wpforo_topics",
+                array( 'status' => intval($status) ),
+                array( 'topicid' => $topicid ),
+                array( '%d' ),
+                array( '%d' )
+        )){
+            if( false !== $this->wpforo->db->update(
+                    $this->wpforo->db->prefix."wpforo_posts",
+                    array( 'status' => intval($status) ),
+                    array( 'topicid' => $topicid ),
+                    array( '%d' ),
+                    array( '%d' )
+            )){
+                $this->wpforo->notice->add('Done!', 'success');
+                return true;
+            }
+        }
+
+        $this->wpforo->notice->add('error: Change Status action', 'error');
+        return false;
+    }
 	
-	
+	public function delete_attachments( $topicid ){
+		$args = array( 'topicid' => $topicid );
+		$posts = $this->wpforo->post->get_posts( $args );
+		if(!empty($posts)){
+			foreach( $posts as $post ){
+				$this->wpforo->post->delete_attachments( $post['postid'] );
+			}
+		}
+	}
+
 }
 ?>

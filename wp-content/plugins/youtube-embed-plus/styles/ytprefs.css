@@ -2,9 +2,18 @@
     cursor: pointer; text-align: left; background-color: #dddddd; color: #000000;
 }
 
+iframe.__youtube_prefs__
+{
+    border-width: 0;
+}
+
 .epyt-gallery {
     text-align: center;
 }
+
+/*.epyt-gallery div[tabindex]:focus {
+    outline: none;
+}*/
 
 .epyt-gallery iframe {
     margin-bottom: 0;
@@ -19,6 +28,10 @@
     position: relative;
     transition: opacity ease-out .3s;
     display: block;
+}
+
+.epyt-gallery-list p {
+    display: none;
 }
 
 .epyt-gallery-clear {

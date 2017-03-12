@@ -1,10 +1,10 @@
 === YouTube ===
 Contributors: embedplus
 Plugin Name: YouTube Embed
-Tags: youtube channel, video gallery, youtube galleries, channel gallery, gallery, playlist gallery, youtube gallery, accessibility, analytics, api, blocked youtube videos, cache, caching, channel, deleted youtube videos, effects, embed youtube, embedding youtube, featured image, get_locale, i18n, internationalization, l10n, language, lazy, lazy load, locale, localization, mute, no-cookie, oembed, page speed, playlist, playlists, plugin, Reddit, responsive, seo, short code, shortcode, ssl, subtitles, thumbnail, thumbnail image, thumbnails, tinymce, translate, translator, video, video analytics, video plugin, video seo, video shortcode, video thumbnails, view count, volume, widget, wordpress security, wordpress youtube embed, youtube, youtube api, youtube analytics, youtube embed, youtube impressions, youtube player, youtube playlist, youtube plugin, youtube shortcode, youtube snippets, youtube takedowns, youtube thumbnails, youtube plugin migration
-Requires at least: 3.3
+Tags: youtube live, live stream, youtube channel, video gallery, youtube galleries, channel gallery, gallery, playlist gallery, youtube gallery, accessibility, analytics, api, blocked youtube videos, cache, caching, channel, deleted youtube videos, effects, embed youtube, embedding youtube, featured image, get_locale, i18n, internationalization, lazy, lazy load, locale, localization, mute, no-cookie, oembed, page speed, playlist, playlists, plugin, Reddit, responsive, seo, short code, shortcode, ssl, subtitles, thumbnail, thumbnail image, thumbnails, tinymce, video, video analytics, video plugin, video seo, video shortcode, video thumbnails, view count, volume, widget, wordpress security, wordpress youtube embed, youtube, youtube api, youtube analytics, youtube embed, youtube impressions, youtube player, youtube playlist, youtube plugin, youtube shortcode, youtube snippets, youtube takedowns, youtube thumbnails, youtube plugin migration
+Requires at least: 3.6.1
 Tested up to: 4.7
-Stable tag: 11.5
+Stable tag: 11.6
 License: GPLv3 or later
 
 YouTube Embed WordPress Plugin. Embed a responsive video, YouTube channel gallery, or playlist gallery. Add thumbnails, analytics, caching...
@@ -15,6 +15,7 @@ YouTube Embed WordPress Plugin. Embed a responsive video, YouTube channel galler
 
 * YouTube Channel and Playlist Gallery - The ability to make playlist (and channel) embeds have a gallery layout. By default, the plugin can generate a grid-based [responsive playlist or channel gallery >>](http://www.embedplus.com/responsive-youtube-playlist-channel-gallery-for-wordpress.aspx). Your visitors can browse through pages of video thumbnails and choose from videos that are pulled from an entire YouTube channel or playlist.
 * Auto continuous play for playlist and channel gallery embeds
+* YouTube Live Stream - Given a link to a YouTube channel, the plugin wizard automatically finds a live stream if one is active in that channel and generates the embed code for you. On the settings page, you can also set defaults of what to automatically display if a live stream is not active at a given moment. For example, you can have your site display a gallery of a channel's entire video library so that users can have something to watch in the meantime. We hope it's a time saver.
 * Improved accessibility by using title attributes for screen reader support. It should help your site pass functional accessibility evaluations (FAE).
 * Improved ajax theme support
 * Site origin information with each embed code as an extra security measure. In YouTube's/Google's own words, checking this option "protects against malicious third-party JavaScript being injected into your page and hijacking control of your YouTube player." We especially recommend checking it as it adds higher security than the built-in YouTube embedding method that comes with the current version of WordPress (i.e. oembed).
@@ -148,6 +149,16 @@ You can also start and end each individual video at particular times. Like the a
 9. YouTube Embed Screenshot 9: Optional YouTube channel subscription button above gallery thumbnails
 
 == Changelog ==
+
+= WordPress YouTube Embed 11.6 =
+* Fixed issue where Free version had some remnants of Pro analytics codebase supporting features here: https://www.embedplus.com/dashboard/easy-youtube-analytics-preview.aspx?platform=sim
+* New feature: live streaming from a channel
+* Optimized player and gallery loading that may improve GTMetrix reports
+* Improved compatibility with pagebuilders
+* Improved compatibility with later versions of jQuery
+* Removed frameborder for W3C validation
+* Gallery pagination enhancement
+* PHP 7 compatibility testing
 
 = WordPress YouTube Embed 11.5 =
 * thumbnail stacking for mobile galleries

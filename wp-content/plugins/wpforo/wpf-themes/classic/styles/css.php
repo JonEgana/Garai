@@ -90,7 +90,8 @@ $css = '/* wpForo Dynamic CSS Document */
 #wpforo-wrap .wpforo-post .wpf-right .wpforo-post-attachments img{border:'. $WPFCOLOR_8 .' 2px solid; background:'. $WPFCOLOR_1 .'; }
 #wpforo-wrap .wpforo-post .wpf-right .wpforo-post-signature{ border-top:'. $WPFCOLOR_11 .' 1px dotted; }
 #wpforo-wrap .wpforo-post .wpf-left .wpforo-membertoggle i{ color:'. $WPFCOLOR_15 .';}
-
+#wpforo-wrap .wpforo-post .wpf-mod-message{color:'. $WPFCOLOR_20 .'}
+	
 #wpforo-wrap .wpforo-topic-badges{ background-color:'. $WPFCOLOR_9 .'; }
 
 #wpforo-wrap .wpfl-1 .wpforo-category{ background-color: '. $WPFCOLOR_12 .'; border-bottom:'. $WPFCOLOR_7 .' 1px solid; }

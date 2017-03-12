@@ -106,25 +106,25 @@
 					if($TotalSoftCal_Par[0]->TotalSoftCal3_Ev_L_Pos == '1') // Link Before Title
 					{
 						$TotalSoftcalEvent .= "<a class='TotalSoftcalEvent_Link TotalSoftcalEvent_LinkBl' href='" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURL . "' target='" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURLNewTab . "'>" . $TotalSoftCal_Par[0]->TotalSoftCal3_Ev_L_Text . "</a>";
-						$TotalSoftcalEvent .= "<p class='TotalSoftcalEvent_Title'>" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvName . "</p>";
+						$TotalSoftcalEvent .= "<p class='TotalSoftcalEvent_Title'>" . html_entity_decode($Total_Soft_CalEvents[$i]->TotalSoftCal_EvName) . "</p>";
 					}
 					else if($TotalSoftCal_Par[0]->TotalSoftCal3_Ev_L_Pos == '2') // Link After Title
 					{
-						$TotalSoftcalEvent .= "<p class='TotalSoftcalEvent_Title'>" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvName . "</p>";
+						$TotalSoftcalEvent .= "<p class='TotalSoftcalEvent_Title'>" . html_entity_decode($Total_Soft_CalEvents[$i]->TotalSoftCal_EvName) . "</p>";
 						$TotalSoftcalEvent .= "<a class='TotalSoftcalEvent_Link TotalSoftcalEvent_LinkBl' href='" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURL . "' target='" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURLNewTab . "'>" . $TotalSoftCal_Par[0]->TotalSoftCal3_Ev_L_Text . "</a>";
 					}
 					else if($TotalSoftCal_Par[0]->TotalSoftCal3_Ev_L_Pos == '3') // Link After Title Text
 					{
-						$TotalSoftcalEvent .= "<p class='TotalSoftcalEvent_Title'>" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvName . "<a class='TotalSoftcalEvent_Link TotalSoftcalEvent_LinkMar' href='" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURL . "' target='" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURLNewTab . "'>" . $TotalSoftCal_Par[0]->TotalSoftCal3_Ev_L_Text . "</a></p>";
+						$TotalSoftcalEvent .= "<p class='TotalSoftcalEvent_Title'>" . html_entity_decode($Total_Soft_CalEvents[$i]->TotalSoftCal_EvName) . "<a class='TotalSoftcalEvent_Link TotalSoftcalEvent_LinkMar' href='" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURL . "' target='" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURLNewTab . "'>" . $TotalSoftCal_Par[0]->TotalSoftCal3_Ev_L_Text . "</a></p>";
 					}
 					else
 					{
-						$TotalSoftcalEvent .= "<p class='TotalSoftcalEvent_Title'>" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvName . "</p>";
+						$TotalSoftcalEvent .= "<p class='TotalSoftcalEvent_Title'>" . html_entity_decode($Total_Soft_CalEvents[$i]->TotalSoftCal_EvName) . "</p>";
 					}
 				}
 				else
 				{
-					$TotalSoftcalEvent .= "<p class='TotalSoftcalEvent_Title'>" . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvName . "</p>";
+					$TotalSoftcalEvent .= "<p class='TotalSoftcalEvent_Title'>" . html_entity_decode($Total_Soft_CalEvents[$i]->TotalSoftCal_EvName) . "</p>";
 				}	
 				$FltimestartPeriod = 'AM';
 				$FltimeendPeriod = 'AM';
@@ -623,7 +623,7 @@
 												$Total_Soft_CalEvents[$i]->TotalSoftCal_EvURLNewTab='';
 											} 
 											$Total_Soft_CalEventDesc=$wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name6 WHERE TotalSoftCal_EvCal=%s order by id",$Total_Soft_CalEvents[$i]->id));
-											$TotalSoftEventData=$Total_Soft_CalEvents[$i]->TotalSoftCal_EvStartDate . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvEndDate . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURL . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvName . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvColor . 'TSCEv' . $Total_Soft_CalEvents[$i]->id . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvStartTime . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvEndTime . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURLNewTab . 'TSCEv' . str_replace(')*^*(', '"', str_replace(")*&*(", "'", $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvDesc)) . 'TSCEv' . $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvImg . 'TSCEv' . $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvVid_Src . 'TSCEv' . $TotalSoftCal_Part[0]->TotalSoftCal_10 . 'TSCEv' . $TotalSoftCal_Part[0]->TotalSoftCal_05;
+											$TotalSoftEventData=$Total_Soft_CalEvents[$i]->TotalSoftCal_EvStartDate . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvEndDate . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURL . 'TSCEv' . html_entity_decode($Total_Soft_CalEvents[$i]->TotalSoftCal_EvName) . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvColor . 'TSCEv' . $Total_Soft_CalEvents[$i]->id . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvStartTime . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvEndTime . 'TSCEv' . $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURLNewTab . 'TSCEv' . str_replace(')*^*(', '"', str_replace(")*&*(", "'", $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvDesc)) . 'TSCEv' . $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvImg . 'TSCEv' . $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvVid_Src . 'TSCEv' . $TotalSoftCal_Part[0]->TotalSoftCal_10 . 'TSCEv' . $TotalSoftCal_Part[0]->TotalSoftCal_05;
 											?>
 												var CalData="<?php echo $TotalSoftEventData;?>".split('TSCEv');
 												var fullstartDate = CalData[0],
@@ -1104,7 +1104,7 @@
 									$TotalSoftCal_EvEndDateSplit=explode('-',$Total_Soft_CalEvents[$i]->TotalSoftCal_EvEndDate);
 
 									?>
-					            	{title: '<?php echo $Total_Soft_CalEvents[$i]->TotalSoftCal_EvName;?>', description: "<?php if($Total_Soft_CalEventDesc){ echo str_replace(')*^*(', '"', str_replace(")*&*(", "'", $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvDesc));}?>", datetime: new Date(<?php echo $TotalSoftCal_EvStartDateSplit[0];?>, <?php echo $TotalSoftCal_EvStartDateSplit[1]-1;?>, <?php echo $TotalSoftCal_EvStartDateSplit[2];?>), endtime: '<?php echo $Total_Soft_CalEvents[$i]->TotalSoftCal_EvEndTime?>', eventurl: "<?php echo $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURL?>", eventnewtab: "<?php echo $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURLNewTab?>", enddateyear: "<?php echo $TotalSoftCal_EvEndDateSplit[0];?>", enddatemonth: "<?php echo $TotalSoftCal_EvEndDateSplit[1]-1;?>", enddateday: "<?php echo $TotalSoftCal_EvEndDateSplit[2];?>", timeformat: '<?php echo $TotalSoftCal_Part[0]->TotalSoftCal_04;?>', enddatereal: "<?php echo $Total_Soft_CalEvents[$i]->TotalSoftCal_EvEndDate;?>", eventimg: "<?php echo $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvImg;?>", eventvid: "<?php echo $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvVid_Src;?>", eventvidpos: "<?php echo $TotalSoftCal_Part[0]->TotalSoftCal_03;?>", realstarttime: "<?php echo $Total_Soft_CalEvents[$i]->TotalSoftCal_EvStartTime;?>"},
+					            	{title: '<?php echo html_entity_decode($Total_Soft_CalEvents[$i]->TotalSoftCal_EvName);?>', description: "<?php if($Total_Soft_CalEventDesc){ echo str_replace(')*^*(', '"', str_replace(")*&*(", "'", $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvDesc));}?>", datetime: new Date(<?php echo $TotalSoftCal_EvStartDateSplit[0];?>, <?php echo $TotalSoftCal_EvStartDateSplit[1]-1;?>, <?php echo $TotalSoftCal_EvStartDateSplit[2];?>), endtime: '<?php echo $Total_Soft_CalEvents[$i]->TotalSoftCal_EvEndTime?>', eventurl: "<?php echo $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURL?>", eventnewtab: "<?php echo $Total_Soft_CalEvents[$i]->TotalSoftCal_EvURLNewTab?>", enddateyear: "<?php echo $TotalSoftCal_EvEndDateSplit[0];?>", enddatemonth: "<?php echo $TotalSoftCal_EvEndDateSplit[1]-1;?>", enddateday: "<?php echo $TotalSoftCal_EvEndDateSplit[2];?>", timeformat: '<?php echo $TotalSoftCal_Part[0]->TotalSoftCal_04;?>', enddatereal: "<?php echo $Total_Soft_CalEvents[$i]->TotalSoftCal_EvEndDate;?>", eventimg: "<?php echo $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvImg;?>", eventvid: "<?php echo $Total_Soft_CalEventDesc[0]->TotalSoftCal_EvVid_Src;?>", eventvidpos: "<?php echo $TotalSoftCal_Part[0]->TotalSoftCal_03;?>", realstarttime: "<?php echo $Total_Soft_CalEvents[$i]->TotalSoftCal_EvStartTime;?>"},
 								<?php }?>
 					        ],
 					        firstDayOfWeek: <?php echo $TotalSoftCal_Par[0]->TotalSoftCal2_WDStart;?>

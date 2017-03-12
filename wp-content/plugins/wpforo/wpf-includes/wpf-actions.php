@@ -397,22 +397,80 @@ function wpforo_actions(){
 		}
 	}
 	
-	##Phrases
-	if( wpforo_is_admin() && isset($_GET['page']) && $_GET['page'] == 'wpforo-phrases' ){
+	##Moderation
+	if( wpforo_is_admin() && isset($_GET['page']) && $_GET['page'] == 'wpforo-moderations' ){
 		
-		if(!current_user_can('administrator')){ 
+		if(!$wpforo->perm->usergroup_can('aum')){
 			$wpforo->notice->add('Permission denied', 'error');
 			wp_redirect(admin_url());
 			exit();
 		}
-		
+
+        $u_action = '';
+        if( !empty($_GET['action']) && $_GET['action'] != '-1' ){
+            $u_action = $_GET['action'];
+        }elseif( !empty($_GET['action2']) && $_GET['action2'] != '-1' ){
+            $u_action = $_GET['action2'];
+        }
+        $bulk = FALSE;
+        $pids = array();
+        if( !empty($_GET['id']) && ($pid = wpforo_bigintval($_GET['id'])) ){
+            $pids = (array) $pid;
+        }elseif( !empty($_GET['ids']) && ($ids = trim($_GET['ids'])) ){
+            $bulk = TRUE;
+            $ids = explode(',', urldecode($ids));
+            $pids = array_map('wpforo_bigintval', array_filter($ids));
+        }
+        $pids = array_diff($pids, (array) $wpforo->current_userid);
+
+        if( $u_action && !empty($pids) ) {
+            if ($u_action == 'del') {
+                if( $bulk ){
+                    !check_admin_referer( 'bulk_action_moderation' );
+                }else{
+                    !check_admin_referer( 'wpforo_admin_table_action_delete' );
+                }
+                foreach ($pids as $pid) $wpforo->post->delete($pid);
+                wp_redirect(admin_url('admin.php?page=wpforo-moderations'));
+                exit();
+            } elseif ($u_action == 'approve') {
+                if( $bulk ){
+                    !check_admin_referer( 'bulk_action_moderation' );
+                }else{
+                    !check_admin_referer( 'wpforo_admin_table_action_approve' );
+                }
+                foreach ($pids as $pid) $wpforo->moderation->post_approve($pid);
+                wp_redirect(admin_url('admin.php?page=wpforo-moderations'));
+                exit();
+            } elseif ($u_action == 'unapprove') {
+                if( $bulk ){
+                    !check_admin_referer( 'bulk_action_moderation' );
+                }else{
+                    !check_admin_referer( 'wpforo_admin_table_action_approve' );
+                }
+                foreach ($pids as $pid) $wpforo->moderation->post_unapprove($pid);
+                wp_redirect(admin_url('admin.php?page=wpforo-moderations'));
+                exit();
+            }
+        }
+    }
+
+	##Phrases
+	if( wpforo_is_admin() && isset($_GET['page']) && $_GET['page'] == 'wpforo-phrases' ){
+
+		if(!current_user_can('administrator')){
+			$wpforo->notice->add('Permission denied', 'error');
+			wp_redirect(admin_url());
+			exit();
+		}
+
 		if(isset($_POST['phrase']['save'])){
 			check_admin_referer( 'wpforo-phrases-edit' );
 			$wpforo->phrase->edit();
 			wp_redirect( admin_url( 'admin.php?page=wpforo-phrases' ) );
 			exit();
 		}
-		
+
 		if( isset($_POST['phrase']['add']) && !empty($_POST['phrase']['value']) ){
 			check_admin_referer( 'wpforo-phrase-add' );
 			$wpforo->phrase->add();
@@ -618,6 +676,75 @@ function wpforo_actions(){
 		exit();
 	}
 	
+	##Tools
+	if( wpforo_is_admin() && isset($_GET['page']) && $_GET['page'] == 'wpforo-tools' ){
+		
+		if(!current_user_can('administrator')){ 
+			$wpforo->notice->add('Permission denied', 'error');
+			wp_redirect(admin_url());
+			exit();
+		}
+		
+		if( isset($_POST['wpforo_tools_antispam']) ){
+			check_admin_referer( 'wpforo-tools-antispam' );
+			if( update_option('wpforo_tools_antispam', $_POST['wpforo_tools_antispam']) ){
+				$wpforo->notice->add('Settings successfully updated', 'success');
+			}
+			wp_redirect( admin_url( 'admin.php?page=wpforo-tools&tab=antispam' ) );
+			exit();
+		}
+		
+		if(isset($_GET['action']) && $_GET['action']=='delete-spam-file' && isset($_GET['sfname']) && $_GET['sfname']){
+			$filename = sanitize_file_name($_GET['sfname']);
+			if(check_admin_referer( 'wpforo_tools_antispam_files')){
+				if(!empty($filename)){
+					$filename = str_replace( array('../', './', '/'), '', $filename );
+					$filename = urldecode( $filename );
+					$upload_dir = wp_upload_dir();
+                	$default_attachments_dir =  $upload_dir['basedir'] . '/wpforo/default_attachments/';
+					$file = $default_attachments_dir . $filename;
+					$attachmentid = $wpforo->post->get_attachment_id( '/' . $filename );
+					if ( !wp_delete_attachment( $attachmentid ) ){
+						@unlink($file); 
+					}
+					$wpforo->notice->add( 'Deleted', 'success' );
+					wp_redirect( admin_url( 'admin.php?page=wpforo-tools&tab=antispam' ) );
+					exit();
+				}
+			}
+			wp_redirect( admin_url( 'admin.php?page=wpforo-tools&tab=antispam' ) );
+			exit();
+		}
+		
+		if(isset($_GET['action']) && $_GET['action']=='delete-all' && isset($_GET['level']) && $_GET['level']){
+			if(check_admin_referer( 'wpforo_tools_antispam_files')){
+				$delete_level = intval($_GET['level']);
+				$upload_dir = wp_upload_dir();
+                $default_attachments_dir =  $upload_dir['basedir'] . '/wpforo/default_attachments/';
+				if(is_dir($default_attachments_dir)){
+					if ($handle = opendir($default_attachments_dir)){
+						while (false !== ($filename = readdir($handle))){
+							$level = 0;
+							if( $filename == '.' ||  $filename == '..') continue;
+							if( !$level = $wpforo->moderation->spam_file($filename) ) continue;
+							if( $delete_level == $level ){
+								$attachmentid = $wpforo->post->get_attachment_id( '/' . $filename );
+								if ( !wp_delete_attachment( $attachmentid ) ){
+									$file = $default_attachments_dir . $filename; @unlink($file); 
+								}
+							}
+						}
+						closedir($handle);
+						$wpforo->notice->add( 'Deleted', 'success' );
+						wp_redirect( admin_url( 'admin.php?page=wpforo-tools&tab=antispam' ) );
+						exit();
+					}
+				}
+			}
+			wp_redirect( admin_url( 'admin.php?page=wpforo-tools&tab=antispam' ) );
+			exit();
+		}
+	}
 	
 	do_action( 'wpforo_actions_end' );
 	

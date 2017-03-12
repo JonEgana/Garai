@@ -72,7 +72,7 @@ class wpForoUsergroup{
 		return FALSE;
 	}
 	
-	function edit( $groupid, $title, $cans ){
+	function edit( $groupid, $title, $cans, $description = '' ){
 		
 		if( $groupid == 1 ) return false;
 		if( !current_user_can('administrator') ){

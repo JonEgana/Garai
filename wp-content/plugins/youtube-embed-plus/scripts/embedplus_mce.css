@@ -52,17 +52,9 @@
     background-image: url("../images/btnwizon.png");
 }
 
-/*
-.wp-core-ui a.ytprefs_media_link, a.ytprefs_media_link
-{
-    padding: 0 10px 1px .4em;
+body #TB_overlay, body #TB_window {
+	z-index: 100000000;
 }
-
-#media-buttons a.ytprefs_media_link_old
-{
-    padding: 3px 10px 3px 10px;
-}
-*/
 
 #media-buttons a.ytprefs_media_link, .wp-core-ui a.ytprefs_media_link, a.ytprefs_media_link
 {

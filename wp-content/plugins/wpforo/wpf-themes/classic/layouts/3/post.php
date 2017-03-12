@@ -45,6 +45,7 @@
 		                </div><!-- left -->
 		                <div class="wpf-right">
                         	<div class="wpforo-post-content-top">
+                            	<?php if($post['status']): ?><span class="wpf-mod-message"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> <?php wpforo_phrase('Awaiting moderation') ?></span><?php endif; ?> 
                                 <div class="wpforo-post-link"><?php $buttons = array( 'link' ); $wpforo->tpl->buttons( $buttons, $forum, $topic, $post, $is_topic ); ?></div>
                                 <div class="wpforo-post-date"><?php wpforo_date($post['created']); ?></div>
                                 <div class="wpf-clear-right"></div>

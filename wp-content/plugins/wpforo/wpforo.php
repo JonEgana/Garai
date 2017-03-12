@@ -5,14 +5,14 @@
 * Description: Next Generation of WordPress Forum Softwares. Everything you need to run an efficient and professional community. Powerful and beautiful bulletin board with unique features.
 * Author: gVectors Team (A. Chakhoyan, R. Hovhannisyan)
 * Author URI: http://gvectors.com/
-* Version: 1.1.2
+* Version: 1.2.0
 * Text Domain: wpforo
 * Domain Path: /wpf-languages
 */
 
 // Exit if accessed directly
 if( !defined( 'ABSPATH' ) ) exit;
-if( !defined( 'WPFORO_VERSION' ) ) define('WPFORO_VERSION', '1.1.2');
+if( !defined( 'WPFORO_VERSION' ) ) define('WPFORO_VERSION', '1.2.0');
 
 function wpforo_load_plugin_textdomain() { load_plugin_textdomain( 'wpforo', FALSE, basename( dirname( __FILE__ ) ) . '/wpf-languages/' ); }
 add_action( 'plugins_loaded', 'wpforo_load_plugin_textdomain' );
@@ -46,7 +46,8 @@ if( !class_exists( 'wpForo' ) ) {
 	include( WPFORO_DIR . '/wpf-includes/class-template.php' );
 	include( WPFORO_DIR . '/wpf-includes/class-notices.php' );
 	include( WPFORO_DIR . '/wpf-includes/class-feed.php' );
-	
+	include( WPFORO_DIR . '/wpf-includes/class-moderation.php' );
+
 	class wpForo{
 	
 		public $options = array();
@@ -66,6 +67,7 @@ if( !class_exists( 'wpForo' ) ) {
 		public	function init(){
 			$this->member->init_current_user();
 			$this->init_current_object();
+			$this->moderation->init();
 			$this->tpl->init_member_templates();
 			$this->tpl->init_nav_menu();
 			wpforo_actions();
@@ -94,6 +96,7 @@ if( !class_exists( 'wpForo' ) ) {
 			$this->subscribe_options = get_wpf_option('wpforo_subscribe_options');
 			$this->countries = get_wpf_option('wpforo_countries');
 			$this->features = get_wpf_option('wpforo_features');
+			$this->tools_antispam = get_wpf_option('wpforo_tools_antispam');
 			$this->style_options = get_wpf_option('wpforo_style_options');
 			$this->theme_options = get_wpf_option('wpforo_theme_options');
 			$this->theme = $this->theme_options['folder'];
@@ -336,6 +339,7 @@ if( !class_exists( 'wpForo' ) ) {
 	$wpforo->tpl = new wpForoTemplate( $wpforo );
 	$wpforo->notice = new wpForoNotices( $wpforo );
 	$wpforo->feed = new wpForoFeed( $wpforo );
+    $wpforo->moderation = new wpForoModeration( $wpforo );
 	if(wpforo_is_admin()) include( WPFORO_DIR .'/wpf-admin/admin.php' );
 	$GLOBALS['wpforo'] = $wpforo;
 	add_action('init', array($wpforo, 'init'));

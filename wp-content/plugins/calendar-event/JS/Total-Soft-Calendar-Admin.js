@@ -41,15 +41,12 @@ function TotalSoftCal_Edit(Total_Soft_Cal_ID)
 		jQuery('.Total_Soft_Cal_AMD2').hide(500);
 		jQuery('.Total_Soft_AMMTable').hide(500);
 		jQuery('.Total_Soft_AMOTable').hide(500);
-		jQuery('.Total_Soft_Cal_Save').hide(500);
-		jQuery('.Total_Soft_Cal_Update').show(500);
 		jQuery('.Total_Soft_Cal_ID').html('[Total_Soft_Cal id="'+Total_Soft_Cal_ID+'"]');
 		jQuery('.Total_Soft_Cal_TID').html('&lt;?php echo do_shortcode(&#039;[Total_Soft_Cal id="'+Total_Soft_Cal_ID+'"]&#039;);?&gt');
 		jQuery('#TotalSoftCal_Name').val(b[1]);	
 		jQuery('#TotalSoftCal_Type').val(b[2]);	
 		jQuery('#TotalSoftCal_Type').hide();
 		setTimeout(function(){
-			jQuery('#Total_SoftCal_Update').val(Total_Soft_Cal_ID);
 			jQuery('.Total_Soft_AMSetTable_Main').show(500);
 			if(b[2]=='Event Calendar')
 			{
@@ -342,4 +339,10 @@ function TotalSoftCal_EditCl(Total_Soft_CalEv_ID)
 	jQuery.post(ajaxurl, data, function(response) {
 		location.reload();
 	})
+}
+function TS_Cal_Del_Vid_Cl()
+{
+	jQuery('#TotalSoftCalendar_URL_Video_2').val('');
+	jQuery('#TotalSoftCalendar_URL_Video_1').val('');
+	jQuery('#TotalSoftCalendar_URL_Image_2').val('');
 }

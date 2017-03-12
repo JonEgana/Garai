@@ -60,6 +60,7 @@
 							$buttons = array( 'reply', 'quote', 'edit', 'like' );
 							$wpforo->tpl->buttons( $buttons, $forum, $topic, $post );
 						} ?>
+                        <?php if($post['status']): ?><span class="wpf-mod-message"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> <?php wpforo_phrase('Awaiting moderation') ?></span></span><?php endif; ?> 
                         </div>
                     </div>
                     <div class="wpforo-post-content-bottom">

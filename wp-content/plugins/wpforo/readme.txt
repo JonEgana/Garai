@@ -3,7 +3,7 @@ Contributors: gVectors Team
 Tags: forum, community, discussion, bulletin board, question and answers, qa, support, foro, forums
 Requires at least: 4.1
 Tested up to: 4.7
-Stable tag: 1.1.2
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,7 @@ Complete Question & Answers discussion board for professional support and for co
 * | German (de_DE) by Markus Herrmann
 * | Spanish (es_ES) Poncho Camacho
 * | Spanish (Mexico) (es_MX) Poncho Camacho
+* | Swedish (sv_SE) by Mathias Persson
 * | Persian (fa_IR) by wpforo.ir
 * | Hebrew (he_IL) Gal Zilberman
 * | Japanese (JA_ja) by Seg Way
@@ -138,6 +139,37 @@ wpForo Support Forum: <http://wpforo.com/community/>
 
 == Changelog ==
 
+= 1.2.0 | 08.03.2017 =
+
+[wpForo v1.2.0 Release Summary](http://wpforo.com/community/wpforo-announcements/wpforo-1-2-0-is-released/)
+
+* Added: wpForo Spam Control - New User
+* Added: New Dashboard subMenu - Forums > Tools > Antispam
+* Antispam: Possible Spam Attachments - lists suspected files
+* Antispam: New Registered Users control and restrictions
+* Antispam: Min number of posts to be able attach files
+* Antispam: Min number of posts to be able post links
+* Antispam: Restricts New Users to attach risky file extensions
+* Antispam: Integration with [Akismet](https://wordpress.org/plugins/akismet/)
+* Added: wpForo Spam Control - Topics & Posts
+* Added: New Dashboard subMenu - Forums > Moderation
+* Antispam: Makes topics/posts unapproved if spam is suspected
+* Antispam: Topic moderation through dashboard Approve/Unapprove/Delete
+* Antispam: Bans new registered users if spam content is detected
+* Antispam: New Forum Access - "Can pass moderation"
+* Added: RTL Font-Awesome
+* Added: Swedish Translation (sv_SE) by Mathias Persson
+* Fixed Bug: Don't allow empty topics and posts
+* Fixed Bug: Post Link URL problem (pagination part in URL)
+* Fixed Bug: Notice: Undefined index: set in .../class-template.php
+
+IMPORTANT:
+
+- Once wpForo is updated, please navigate to Dashboard > Forums > Tools admin page and check the "Possible Spam Attachments" section. We detected massive spam file uploading cases in non-protected forums. Spammers delete topics and posts but uploaded spam files are still in your file system, most of those PDF files. Please delete all suspected PDF files listed in this section. [More Info](http://wpforo.com/community/wpforo-announcements/wpforo-1-2-0-is-released/)...
+- To load old customized colors please refresh forum page twice.
+- If you have a Cache Plugin, please delete all caches after wpForo update.
+- If you use CDN and found some issue please purge it. 
+
 
 = 1.1.2 | 26.02.2017 =
 
@@ -172,17 +204,6 @@ wpForo Support Forum: <http://wpforo.com/community/>
 * Fixed Bug: Editor - Add Link pop-up window size issue on mobile
 * Fixed Bug: Undefined variable: size_da in .../dashboard.php on line 182
 * Fixed Bug: SSL Problem
-
-IMPORTANT:
-
-- To load old customized colors please refresh forum page twice.
-- If you have a Cache Plugin, please delete all caches after wpForo update.
-- If you use CDN and found some issue please purge it. 
-- If you have custom forum template, please update these template files:
-	* profile.php
-	* members.php
-	* layouts/1/post.php
-	* layouts/2/post.php
 
 
 = 1.1.1 | 20.12.2016 =

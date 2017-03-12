@@ -5,7 +5,7 @@
 ?>
 
 <div id="wpf-admin-wrap" class="wrap wpforo-themes">
-	<h2 style="padding:20px 0px 0px 0px;line-height: 20px;">
+	<h2 style="padding:20px 0px 0px 0px;line-height: 20px;  margin-bottom:15px;">
 		<?php _e('Forum Themes', 'wpforo'); ?>
 		<a href="<?php echo admin_url( 'admin.php?page=wpforo-themes&action=add' ) ?>" class="add-new-h2" style="margin-left:10px; display:none;"><?php _e('Add New', 'wpforo'); ?></a>
 	</h2>

@@ -865,6 +865,7 @@ function wpforo_admin_mail_headers($from_name = '', $from_email = '', $cc = arra
 	}
 	return $H;
 }
+
 ############### Sending Email end  ##############
 
 function wpforo_frontend_enqueue(){
@@ -877,8 +878,12 @@ function wpforo_frontend_enqueue(){
 		wp_register_script( 'wpforo-frontend-js', WPFORO_URL . '/wpf-assets/js/frontend.js', array('jquery'), WPFORO_VERSION, false );
 		wp_enqueue_script('wpforo-frontend-js');
 		if( wpforo_feature( 'font-awesome', $wpforo) ){
-			wp_register_style('wpforo-font-awesome', WPFORO_URL . '/wpf-assets/css/font-awesome/css/font-awesome.min.css', false, '4.6.3' );
+			wp_register_style('wpforo-font-awesome', WPFORO_URL . '/wpf-assets/css/font-awesome/css/font-awesome.min.css', false, '4.7' );
 			wp_enqueue_style('wpforo-font-awesome');
+			if (is_rtl()) {
+				wp_register_style('wpforo-font-awesome-rtl', WPFORO_URL . '/wpf-assets/css/font-awesome/font-awesome-rtl.css', false, WPFORO_VERSION );
+				wp_enqueue_style('wpforo-font-awesome-rtl');
+			}
 		}
 		if(is_user_logged_in()){
 			wp_register_script('wpforo-ajax', WPFORO_URL . '/wpf-assets/js/ajax.js', array('jquery'), WPFORO_VERSION, false);
@@ -1272,6 +1277,12 @@ function wpforo_forum_subscribers_mail_sender( $topic ){
 					continue;
 				}
 			}
+			if( isset($topic['status']) && $topic['status'] == 1 ){
+				$subscriber_goupid = ( isset($member['groupid']) && $member['groupid'] ) ? $member['groupid'] : $wpforo->usergroup->get_groupid_by_userid($subscriber['userid']);
+				if( !$wpforo->perm->forum_can('au', $topic['forumid'], $subscriber_goupid) ){
+					continue;
+				}
+			}
 		}
 		
 		$owner = $wpforo->member->get_member( $topic['userid'] );
@@ -1281,6 +1292,15 @@ function wpforo_forum_subscribers_mail_sender( $topic ){
 		$forum  = $wpforo->forum->get_forum( $topic['forumid'] );
 		
 		############### Sending Email  ##################
+			
+			if( isset($topic['status']) && $topic['status'] ){
+				$subject_prefix = __('Please Moderate: ', 'wpforo');
+				$mod_text = '<br /><br /><p style="color:#DD0000">' . __('This topic is currently unapproved. You can approve topics in Dashboard &raquo; Forums &raquo; Moderation admin page.', 'wpforo') . '</p>';
+			}
+			else{
+				$subject_prefix = '';
+				$mod_text = '';
+			}
 			
 			$subject = $wpforo->subscribe_options['new_topic_notification_email_subject']; 
 		 	$message = $wpforo->subscribe_options['new_topic_notification_email_message']; 
@@ -1297,6 +1317,8 @@ function wpforo_forum_subscribers_mail_sender( $topic ){
 			
 			add_filter( 'wp_mail_content_type', 'wpforo_set_html_content_type' );
 			$headers = wpforo_mail_headers();
+			$subject = $subject_prefix . $subject;
+			$message = $message . $mod_text;
 	 		$email_status = wp_mail( $member['user_email'] , $subject, $message, $headers );
 	 		remove_filter( 'wp_mail_content_type', 'wpforo_set_html_content_type' );
 	 		
@@ -1340,9 +1362,24 @@ function wpforo_topic_subscribers_mail_sender( $post ){
 					continue;
 				}
 			}
+			if( isset($topic['status']) && $topic['status'] == 1 ){
+				$subscriber_goupid = ( isset($member['groupid']) && $member['groupid'] ) ? $member['groupid'] : $wpforo->usergroup->get_groupid_by_userid($subscriber['userid']);
+				if( !$wpforo->perm->forum_can('au', $topic['forumid'], $subscriber_goupid) ){
+					continue;
+				}
+			}
 		}
 		
 		############### Sending Email  ##################
+			
+			if( isset($post['status']) && $post['status'] ){
+				$subject_prefix = __('Please Moderate: ', 'wpforo');
+				$mod_text = '<br /><br /><p style="color:#DD0000">' . __('This post is currently unapproved. You can approve posts in Dashboard &raquo; Forums &raquo; Moderation admin page.', 'wpforo') . '</p>';
+			}
+			else{
+				$subject_prefix = '';
+				$mod_text = '';
+			}
 			
 			$subject = $wpforo->subscribe_options['new_post_notification_email_subject']; 
 		 	$message = $wpforo->subscribe_options['new_post_notification_email_message']; 
@@ -1359,6 +1396,8 @@ function wpforo_topic_subscribers_mail_sender( $post ){
 			
 			add_filter( 'wp_mail_content_type', 'wpforo_set_html_content_type' );
 			$headers = wpforo_mail_headers();
+			$subject = $subject_prefix . $subject;
+			$message = $message . $mod_text;
 	 		$email_status = wp_mail( $member['user_email'] , $subject, $message, $headers );
 	 		remove_filter( 'wp_mail_content_type', 'wpforo_set_html_content_type' );
 	 		
@@ -1372,76 +1411,81 @@ add_action( 'wpforo_after_add_post', 'wpforo_topic_subscribers_mail_sender', 13,
 function wpforo_add_default_attachment($args){
 	if( !empty($_FILES['attachfile']) && !empty($_FILES['attachfile']['name']) ){
 		global $wpforo;
-		
-		$name = sanitize_file_name($_FILES['attachfile']['name']); //myimg.png
-		$type = sanitize_mime_type($_FILES['attachfile']['type']); //image/png
-		$tmp_name = sanitize_text_field($_FILES['attachfile']['tmp_name']); //D:\wamp\tmp\php986B.tmp
-		$error = intval($_FILES['attachfile']['error']); //0
-		$size = intval($_FILES['attachfile']['size']); //6112
-		
-		$phpFileUploadErrors = array(
-		    0 => 'There is no error, the file uploaded with success',
-		    1 => 'The uploaded file size is too big',
-		    2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
-		    3 => 'The uploaded file was only partially uploaded',
-		    4 => 'No file was uploaded',
-		    6 => 'Missing a temporary folder',
-		    7 => 'Failed to write file to disk.',
-		    8 => 'A PHP extension stopped the file upload.',
-		);
-		
-		if( $error ){
-			$wpforo->notice->add($phpFileUploadErrors[$error], 'error');
-			return FALSE;
-		}elseif( $size > $wpforo->post_options['max_upload_size'] ){
-			$wpforo->notice->add('The uploaded file size is too big', 'error');
-			return FALSE;
-		}
-		
-		if(function_exists('pathinfo')){
-			$ext = pathinfo($name, PATHINFO_EXTENSION);
-		}
-		else{
-			$ext = substr(strrchr($name, '.'), 1);
-		}
-		$ext = strtolower($ext);
-		$mime_types = get_allowed_mime_types();
-		$mime_types = array_flip($mime_types);
-		if(!empty($mime_types)){
-			$allowed_types = implode('|', $mime_types);
-			$expld = explode('|', $allowed_types);
-			if( !in_array($ext, $expld) ){
-				$wpforo->notice->add('File type is not allowed', 'error');
-				return FALSE;
+		if( $wpforo->perm->can_attach() ){
+			$name = sanitize_file_name($_FILES['attachfile']['name']); //myimg.png
+			$type = sanitize_mime_type($_FILES['attachfile']['type']); //image/png
+			$tmp_name = sanitize_text_field($_FILES['attachfile']['tmp_name']); //D:\wamp\tmp\php986B.tmp
+			$error = intval($_FILES['attachfile']['error']); //0
+			$size = intval($_FILES['attachfile']['size']); //6112
+			
+			$phpFileUploadErrors = array(
+				0 => 'There is no error, the file uploaded with success',
+				1 => 'The uploaded file size is too big',
+				2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+				3 => 'The uploaded file was only partially uploaded',
+				4 => 'No file was uploaded',
+				6 => 'Missing a temporary folder',
+				7 => 'Failed to write file to disk.',
+				8 => 'A PHP extension stopped the file upload.',
+			);
+			
+			if( $error ){
+				$wpforo->notice->add($phpFileUploadErrors[$error], 'error');
+				return $args;
+			}elseif( $size > $wpforo->post_options['max_upload_size'] ){
+				$wpforo->notice->add('The uploaded file size is too big', 'error');
+				return $args;
 			}
-		}
-		
-		$wp_upload_dir = wp_upload_dir();
-		$uplds_dir = $wp_upload_dir['basedir']."/wpforo";
-		$attach_dir = $wp_upload_dir['basedir']."/wpforo/default_attachments";
-		$attach_url = preg_replace('#^https?\:#is', '', $wp_upload_dir['baseurl'])."/wpforo/default_attachments";
-		if(!is_dir($uplds_dir)) wp_mkdir_p($uplds_dir);
-		if(!is_dir($attach_dir)) wp_mkdir_p($attach_dir);
-		
-        $fnm = pathinfo($name, PATHINFO_FILENAME);
-        $fnm = str_replace(' ', '-', $fnm);
-        while(strpos($fnm, '--') !== FALSE) $fnm = str_replace('--', '-', $fnm);
-        $fnm = preg_replace("/[^-a-zA-Z0-9]/", "", $fnm);
-        $fnm = trim($fnm, "-");
-        $fnm_empty = ( $fnm ? FALSE : TRUE );
-        
-        $file_name = $fnm . "." . $ext;
-		
-		$attach_fname = current_time( 'timestamp', 1 ).( !$fnm_empty ? '-' : '' ) . $file_name;
-		$attach_path = $attach_dir . "/" . $attach_fname;
-		
-		if( is_dir($attach_dir) && move_uploaded_file($tmp_name, $attach_path) ){
-			$attach_id = wpforo_insert_to_media_library( $attach_path, $fnm );
-			$args['body'] .= "\r\n" . '<div id="wpfa-' . $attach_id . '" class="wpforo-attached-file"><a class="wpforo-default-attachment" href="' . esc_url($attach_url.'/'.$attach_fname) . '" target="_blank"><i class="fa fa-paperclip"></i>' . esc_html(basename($name)) . '</a></div>';
-			$args['has_attach'] = 1;
-		}else{
-			$wpforo->notice->add('Can`t upload file', 'error');
-			return FALSE;
+			
+			if(function_exists('pathinfo')){
+				$ext = pathinfo($name, PATHINFO_EXTENSION);
+			}
+			else{
+				$ext = substr(strrchr($name, '.'), 1);
+			}
+			$ext = strtolower($ext);
+			$mime_types = get_allowed_mime_types();
+			$mime_types = array_flip($mime_types);
+			if(!empty($mime_types)){
+				$allowed_types = implode('|', $mime_types);
+				$expld = explode('|', $allowed_types);
+				if( !in_array($ext, $expld) ){
+					$wpforo->notice->add('File type is not allowed', 'error');
+					return $args;
+				}
+				if( !$wpforo->perm->can_attach_file_type($ext) ){
+					 $wpforo->notice->add('You are not allowed to attach this file type', 'error');
+					 return $args;
+				}
+			}
+			
+			$wp_upload_dir = wp_upload_dir();
+			$uplds_dir = $wp_upload_dir['basedir']."/wpforo";
+			$attach_dir = $wp_upload_dir['basedir']."/wpforo/default_attachments";
+			$attach_url = preg_replace('#^https?\:#is', '', $wp_upload_dir['baseurl'])."/wpforo/default_attachments";
+			if(!is_dir($uplds_dir)) wp_mkdir_p($uplds_dir);
+			if(!is_dir($attach_dir)) wp_mkdir_p($attach_dir);
+			
+			$fnm = pathinfo($name, PATHINFO_FILENAME);
+			$fnm = str_replace(' ', '-', $fnm);
+			while(strpos($fnm, '--') !== FALSE) $fnm = str_replace('--', '-', $fnm);
+			$fnm = preg_replace("/[^-a-zA-Z0-9]/", "", $fnm);
+			$fnm = trim($fnm, "-");
+			$fnm_empty = ( $fnm ? FALSE : TRUE );
+			
+			$file_name = $fnm . "." . $ext;
+			
+			$attach_fname = current_time( 'timestamp', 1 ).( !$fnm_empty ? '-' : '' ) . $file_name;
+			$attach_path = $attach_dir . "/" . $attach_fname;
+			
+			if( is_dir($attach_dir) && move_uploaded_file($tmp_name, $attach_path) ){
+				$attach_id = wpforo_insert_to_media_library( $attach_path, $fnm );
+				$args['body'] .= "\r\n" . '<div id="wpfa-' . $attach_id . '" class="wpforo-attached-file"><a class="wpforo-default-attachment" href="' . esc_url($attach_url.'/'.$attach_fname) . '" target="_blank"><i class="fa fa-paperclip"></i>' . esc_html(basename($name)) . '</a></div>';
+				$args['has_attach'] = 1;
+			}else{
+				$wpforo->notice->add('Can`t upload file', 'error');
+				return $args;
+			}
 		}
 	}
 	return $args;
@@ -1501,28 +1545,3 @@ if( !class_exists('wpForoSmiles') ){
 	add_filter('wpforo_body_text_filter', 'wp_encode_emoji', 9);
 	add_filter('wpforo_body_text_filter', 'convert_smilies');
 }
-
-function wpforo_akismet_check(){
-	global $wpforo;
-	$post = array();
-	$post['user_ip']      = ( isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : null );
-	$post['user_agent']   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : null );
-	$post['referrer']     = ( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : null );
-	$post['blog']         = get_option( 'home' );
-	$post['blog_lang']    = get_locale();
-	$post['blog_charset'] = get_option('blog_charset');
-	$post['permalink']    = $wpforo->topic->get_topic_url(5);
-	$post['comment_type'] = 'forum-post';
-	$post['comment_author'] = 'viagra34567';
-	$post['comment_author_email'] = 'test@example.com';
-	$post['comment_author_url'] = $wpforo->member->get_profile_url(4);
-	$post['comment_post_modified_gmt'] = '2016-09-26 23:22:14';
-	$post['comment_content'] = 'comment content';
-	$post['is_test'] = 'true';
-	
-	$response = Akismet::http_post( Akismet::build_query( $post ), 'comment-check' );
-	var_dump($response);
-}
-//add_action('init', 'wpforo_akismet_check');
-
-?>

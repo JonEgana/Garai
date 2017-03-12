@@ -42,7 +42,7 @@
 	        </div><!-- left -->
 	        <div class="wpf-right">
 	            <div class="wpforo-post-content-top">
-	                <span><?php wpforo_date($post['created'], 'd/m/Y g:i a'); ?></span> &nbsp; <a href="<?php echo esc_url($wpforo->post->get_post_url($post['postid'])) ?>"><i class="fa fa-link fa-0x"></i></a>
+	                <?php if($post['status']): ?><span class="wpf-mod-message"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> <?php wpforo_phrase('Awaiting moderation') ?></span><?php endif; ?> <span><?php wpforo_date($post['created'], 'd/m/Y g:i a'); ?></span> &nbsp; <a href="<?php echo esc_url($wpforo->post->get_post_url($post['postid'])) ?>"><i class="fa fa-link fa-0x"></i></a>
 	            </div><!-- wpforo-post-content-top -->
 	            <div class="wpforo-post-content">
 					<?php echo wpforo_content_filter( wpforo_kses($post['body'], 'post') ) ?>

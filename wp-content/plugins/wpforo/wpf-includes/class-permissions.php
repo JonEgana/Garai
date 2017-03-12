@@ -10,10 +10,12 @@ class wpForoPermissions{
 	
 	function __construct( $wpForo ){
 		if(!isset($this->wpforo)) $this->wpforo = $wpForo;
-		$accesses = $this->get_accesses();
-		if(!empty($accesses)){
-			foreach( $accesses as $access ){
-				$this->wpforo->access[$access['access']] = $access;
+		if( isset( $this->wpforo->post_options['lang'] ) && $this->wpforo->post_options['lang'] ){
+			$accesses = $this->get_accesses();
+			if(!empty($accesses)){
+				foreach( $accesses as $access ){
+					$this->wpforo->access[$access['access']] = $access;
+				}
 			}
 		}
 	}
@@ -265,6 +267,52 @@ class wpForoPermissions{
 			}
 		}
 		return $level;
+	}
+	
+	
+	
+	public function can_link(){
+		if( !$this->wpforo->perm->usergroup_can( 'em' ) ){
+			$posts = $this->wpforo->member->member_approved_posts( $this->wpforo->current_userid );
+			$posts = intval($posts);
+			if( isset($this->wpforo->tools_antispam['min_number_post_to_link']) ){
+				$min_posts = intval($this->wpforo->tools_antispam['min_number_post_to_link']);
+				if( $min_posts != 0 ){
+					if ( $posts <= $min_posts ) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
+	public function can_attach(){
+		if( !$this->wpforo->perm->usergroup_can( 'em' ) ){
+			$posts = $this->wpforo->member->member_approved_posts( $this->wpforo->current_userid );
+			$posts = intval($posts);
+			if( isset($this->wpforo->tools_antispam['min_number_post_to_attach']) ){
+				$min_posts = intval($this->wpforo->tools_antispam['min_number_post_to_attach']);
+				if( $min_posts != 0 ){
+					if ( $posts <= $min_posts  ) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
+	public function can_attach_file_type( $ext = '' ){
+		if( !$this->wpforo->perm->usergroup_can( 'em' ) ){
+			if( isset($this->wpforo->tools_antispam['limited_file_ext']) && $this->wpforo->member->current_user_is_new() ){
+				$expld = explode('|', $this->wpforo->tools_antispam['limited_file_ext'] );
+				if( in_array($ext, $expld) ){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 }

@@ -693,9 +693,16 @@ function wpforo_member_badge( $member = array(), $sep = '', $type = 'full' ){
     do_action('wpforo_after_member_badge', $member);
 }
 
-add_filter( 'body_class', function( $classes ) {
-    return array_merge( $classes, array( 'wpforo' ) );
-} );
-
+add_filter( 'body_class', 'wpforo_page_class', 1, 10 );
+function wpforo_page_class( $classes ) {
+	if(!empty($classes)){
+    	if( function_exists('is_wpforo_page') ){
+			if ( is_wpforo_page() ) {
+				return array_merge( $classes, array( 'wpforo' ) );
+			}
+		}
+	}
+	return (array)$classes;
+}
 
 ?>

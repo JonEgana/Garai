@@ -656,4 +656,17 @@ $wpforo_phrases = array(
  'Only Admins and Moderators can see your private topics.' => __('Only Admins and Moderators can see your private topics.', 'wpforo'),
  'Forum ID is not detected' => __('Forum ID is not detected', 'wpforo'),
  'You are not permitted to subscribe here' => __('You are not permitted to subscribe here', 'wpforo'),
+ 'Subscribe to this topic' => __('Subscribe to this topic', 'wpforo'),
+ 
+ // 1.2.0 //
+ 'Awaiting moderation' => __('Awaiting moderation', 'wpforo'),
+ 'Topic first post not found.' => __('Topic first post not found.', 'wpforo'),
+ 'Topic first post data not found.' => __('Topic first post data not found.', 'wpforo'),
+ 'Settings successfully updated' => __('Settings successfully updated', 'wpforo'),
+ 'Done!' => __('Done!', 'wpforo'),
+ 'unapproved' => __('unapproved', 'wpforo'),
+ 'You are not allowed to attach this file type' => __('You are not allowed to attach this file type', 'wpforo'),
+ 'Post is empty' => __('Post is empty', 'wpforo'),
+ 'removed link' => __('removed link', 'wpforo'),
+ 'Submit'  => __('Submit', 'wpforo'),
  );

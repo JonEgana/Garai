@@ -3,6 +3,7 @@
 	{
 		die('Access Denied');
 	}
+	require_once(dirname(__FILE__) . '/Total-Soft-Calendar-Install.php');
 	global $wpdb;
 
 	wp_enqueue_media();
@@ -17,7 +18,7 @@
 	$table_name4 = $wpdb->prefix . "totalsoft_cal_types";
 	$table_name6 = $wpdb->prefix . "totalsoft_cal_events_p2";
 
-	$TotalSoftCal_EvName=sanitize_text_field($_POST['TotalSoftCal_EvName']);
+	$TotalSoftCal_EvName=str_replace("\&","&", sanitize_text_field(esc_html($_POST['TotalSoftCal_EvName'])));
 	$TotalSoftCal_EvCal=sanitize_text_field($_POST['TotalSoftCal_EvCal']);
 	$TotalSoftCal_EvStartDate=sanitize_text_field($_POST['TotalSoftCal_EvStartDate']);
 	$TotalSoftCal_EvEndDate=sanitize_text_field($_POST['TotalSoftCal_EvEndDate']);
@@ -134,8 +135,9 @@
 		</tr>
 		<tr>
 			<td><input type="text" id="TotalSoftCalendar_URL_Video_2" name="TotalSoftCalendar_URL_Video_2" class="Total_Soft_Select" style="display:none"></td>
-			<td>
+			<td style="position: relative;">
 				<input type="text" id="TotalSoftCalendar_URL_Video_1" name="TotalSoftCalendar_URL_Video_1" readonly class="Total_Soft_Select">
+				<i class="TS_Cal_Del_Vid totalsoft totalsoft-times" aria-hidden="true" onclick="TS_Cal_Del_Vid_Cl()"></i>
 			</td>
 			<td><input type="text" id="TotalSoftCalendar_URL_Image_2" name="TotalSoftCalendar_URL_Image_2" class="Total_Soft_Select" style="display:none"></td>
 			<td></td>
@@ -146,7 +148,7 @@
 		</tr>
 	</table>
 
-	<table class="Total_Soft_AMMTable">
+	<table class="Total_Soft_AMMTable1">
 		<tr class="Total_Soft_AMMTableFR">
 			<td><?php echo __( 'No', 'Total-Soft-Calendar' );?></td>
 			<td><?php echo __( 'Event Title', 'Total-Soft-Calendar' );?></td>
@@ -155,7 +157,7 @@
 		</tr>
 	</table>
 
-	<table class="Total_Soft_AMOTable">
+	<table class="Total_Soft_AMOTable1">
 	 	<?php for($i=0;$i<count($TotalSoftEvCount);$i++){
 	 		$TotalSoft_Cal_Name=$wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name4 WHERE id=%d", $TotalSoftEvCount[$i]->TotalSoftCal_EvCal));
 	 		?> 

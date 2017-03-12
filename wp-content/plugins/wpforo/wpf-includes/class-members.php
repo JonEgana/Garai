@@ -1134,6 +1134,55 @@ class wpForoMember{
 		<?php endif;
 	}
 	
+	
+	
+	public function autoban($userid){
+		if( !$this->wpforo->perm->usergroup_can( 'em' ) ){
+			$this->wpforo->db->update(
+				$this->wpforo->db->prefix.'wpforo_profiles',
+				array('status' => 'banned'),
+				array('userid' => intval( $userid )),
+				array('%s'),
+				array('%d')
+			);
+		}
+	}
+	
+	public function member_approved_posts( $member = array() ){
+		if(is_numeric($member)){
+			if( isset($this->wpforo->current_user['posts']) && $this->wpforo->current_user['posts'] && $member == $this->wpforo->current_userid ){
+				return $this->wpforo->current_user['posts'];
+			}
+			else{
+				return $this->wpforo->db->get_var( "SELECT COUNT(*) as posts FROM `".$this->wpforo->db->prefix."wpforo_posts` WHERE `status` = 0 AND `userid` = " . intval($member) );
+			}
+		}
+		elseif(is_array($member) && !empty($member)){
+			return intval($member['posts']);
+		}
+		else{
+			return 0;
+		}
+	}
+	
+	public function current_user_is_new(){
+		if( $this->wpforo->perm->usergroup_can( 'em' ) ){
+			//This is an admin or moderator. The number of posts doesn't matter.
+			return false;
+		}
+		else{
+			$posts = $this->member_approved_posts( $this->wpforo->current_userid );
+			if ( $posts < $this->wpforo->tools_antispam['new_user_max_posts'] ) {
+				return true;
+			}
+		}
+	}
+	
+	function banned_count(){
+		$count = $this->wpforo->db->get_var("SELECT count(*) FROM `".$this->wpforo->db->prefix."wpforo_profiles` WHERE `status` = 'banned' " );
+		return $count;
+	}
+	
 }
 
 ?>

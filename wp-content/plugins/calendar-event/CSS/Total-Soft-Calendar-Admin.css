@@ -151,7 +151,7 @@ input[type=range]:focus::-ms-fill-upper {
 	background-color: white;
 	color:#009491;
 }
-.Total_Soft_AMMTable
+.Total_Soft_AMMTable, .Total_Soft_AMMTable1
 {
 	width: 99%;
 	background-color: #ffffff;
@@ -165,23 +165,31 @@ input[type=range]:focus::-ms-fill-upper {
 {
 	background-color: #009491;
 }
-.Total_Soft_AMMTable td:nth-child(1)
+.Total_Soft_AMMTable td:nth-child(1), .Total_Soft_AMMTable1 td:nth-child(1)
 {
 	width: 10%;
 }
 .Total_Soft_AMMTable td:nth-child(2)
 {
+	width: 40%;
+}
+.Total_Soft_AMMTable1 td:nth-child(2)
+{
 	width: 30%;
 }
-.Total_Soft_AMMTable td:nth-child(3)
+.Total_Soft_AMMTable td:nth-child(3), .Total_Soft_AMMTable1 td:nth-child(3)
 {
 	width: 30%;
 }
 .Total_Soft_AMMTable td:nth-child(4)
 {
+	width: 20%;
+}
+.Total_Soft_AMMTable1 td:nth-child(4)
+{
 	width: 30%;
 }
-.Total_Soft_AMOTable
+.Total_Soft_AMOTable, .Total_Soft_AMOTable1
 {
 	width: 99%;
 	background-color: #ffffff;
@@ -190,33 +198,37 @@ input[type=range]:focus::-ms-fill-upper {
 	box-shadow: 0px 0px 30px #000000;
 	padding: 1px;
 }
-.Total_Soft_AMOTable tr:nth-child(odd)
+.Total_Soft_AMOTable tr:nth-child(odd), .Total_Soft_AMOTable1 tr:nth-child(odd)
 {
 	background-color: #f4f4f4;
 }
-.Total_Soft_AMOTable tr:nth-child(even)
+.Total_Soft_AMOTable tr:nth-child(even), .Total_Soft_AMOTable1 tr:nth-child(even)
 {
 	background-color: #dddddd;	
 }
-.Total_Soft_AMOTable td:nth-child(1)
+.Total_Soft_AMOTable td:nth-child(1), .Total_Soft_AMOTable1 td:nth-child(1)
 {
 	width: 10%;
 }
 .Total_Soft_AMOTable td:nth-child(2)
 {
-	width: 30%;
+	width: 40%;
 }
-.Total_Soft_AMOTable td:nth-child(3)
+.Total_Soft_AMOTable1 td:nth-child(2)
 {
 	width: 30%;
 }
-.Total_Soft_AMOTable td:nth-child(4), .Total_Soft_AMOTable td:nth-child(5), .Total_Soft_AMOTable td:nth-child(6)
+.Total_Soft_AMOTable td:nth-child(3), .Total_Soft_AMOTable1 td:nth-child(3)
+{
+	width: 30%;
+}
+.Total_Soft_AMOTable td:nth-child(4), .Total_Soft_AMOTable td:nth-child(5), .Total_Soft_AMOTable1 td:nth-child(4), .Total_Soft_AMOTable1 td:nth-child(5), .Total_Soft_AMOTable1 td:nth-child(6)
 { 
 	width: 10%;
 	cursor: pointer;
 	font-size: 15px !important;
 }
-.Total_Soft_AMOTable td:nth-child(4):hover,.Total_Soft_AMOTable td:nth-child(5):hover
+.Total_Soft_AMOTable td:nth-child(4):hover, .Total_Soft_AMOTable td:nth-child(5):hover, .Total_Soft_AMOTable1 td:nth-child(4):hover, .Total_Soft_AMOTable1 td:nth-child(5):hover, .Total_Soft_AMOTable1 td:nth-child(6):hover
 {
 	opacity: 0.8;
 }
@@ -364,4 +376,18 @@ input[type=range]:focus::-ms-fill-upper {
 {
 	background-color: #009491;
 	color:#ffffff;
+}
+.TS_Cal_Del_Vid
+{
+	position: absolute; 
+	margin-left: 10px; 
+	top: 50%; 
+	-webkit-transform: translateY(-50%); 
+	-moz-transform: translateY(-50%); 
+	-o-transform: translateY(-50%); 
+	-ms-transform: translateY(-50%); 
+	transform: translateY(-50%); 
+	font-size: 16px !important; 
+	color: #ff0000; 
+	cursor: pointer; 
 }

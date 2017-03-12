@@ -370,4 +370,14 @@
 	<phrase name="Only Admins and Moderators can see your private topics."><![CDATA[Only Admins and Moderators can see your private topics.]]></phrase>
 	<phrase name="Forum ID is not detected"><![CDATA[Forum ID is not detected]]></phrase>
 	<phrase name="You are not permitted to subscribe here"><![CDATA[You are not permitted to subscribe here]]></phrase>
+	<phrase name="Subscribe to this topic"><![CDATA[Subscribe to this topic]]></phrase>
+	<phrase name="Awaiting moderation"><![CDATA[Awaiting moderation]]></phrase>
+	<phrase name="Topic first post not found."><![CDATA[Topic first post not found.]]></phrase>
+	<phrase name="Topic first post data not found."><![CDATA[Topic first post data not found.]]></phrase>
+	<phrase name="Done!"><![CDATA[Done!]]></phrase>
+	<phrase name="unapproved"><![CDATA[unapproved]]></phrase>
+	<phrase name="You are not allowed to attach this file type"><![CDATA[You are not allowed to attach this file type]]></phrase>
+	<phrase name="Post is empty"><![CDATA[Post is empty]]></phrase>
+	<phrase name="removed link"><![CDATA[removed link]]></phrase>
+	<phrase name="Submit"><![CDATA[Submit]]></phrase>
 </language>

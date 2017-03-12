@@ -7,7 +7,7 @@
 <div id="wpf-admin-wrap" class="wrap">
 	<?php wpforo_screen_option() ?>
 	<div id="icon-users" class="icon32"><br></div>
-	<h2 style="padding:30px 0px 0px 0px;line-height: 20px;"><?php _e('Members', 'wpforo'); ?></h2>
+	<h2 style="padding:30px 0px 0px 0px;line-height: 20px; margin-bottom:15px;"><?php _e('Members', 'wpforo'); ?></h2>
 	<?php $wpforo->notice->show(FALSE) ?>
 	<?php if(!isset( $_GET['action'] ) || ( isset( $_GET['action']) &&  $_GET['action'] == -1 ) ) : ?>
 		<?php 
