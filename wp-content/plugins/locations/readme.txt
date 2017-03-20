@@ -1,9 +1,9 @@
 === Plugin Name ===
 Contributors: ghuger, richardgabriel
 Tags: locations, business locations, business maps, maps, business address map
-Requires at least: 3.0.1
-Tested up to: 4.5.3
-Stable tag: 1.14.4
+Requires at least: 4.0.0
+Tested up to: 4.7.3
+Stable tag: 1.14.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -136,13 +136,13 @@ https://developers.google.com/maps/documentation/javascript/tutorial#api_key
 
 == Changelog ==
 
-= 1.14.4 =
-* Updates compatibility to WP 4.5.3
-* Updates Single Location Widget and List of Locations Widget to expose more options
-* Adds store_locator_item_html filter
+= 1.14.5 =
+* Updates compatibility to WP 4.7.3
+* Fixes issue with API key not being properly included.
+* Fixes issue with category slugs not being properly filtered.
 
 * [View Changelog](https://goldplugins.com/documentation/locations-documentation/locations-changelog/ "View Changelog")
 
 == Upgrade Notice ==
 
-* 1.14.4: Widget, compatibility updates.
+* 1.14.5: Update available.

@@ -156,7 +156,7 @@
 
 		global $post;
 
-		$output = '<ul class="dpsp-networks-btns-wrapper ' . ( !empty($location) ? 'dpsp-networks-btns-' . $location : '' ) . '">';
+		$output = '<ul class="dpsp-networks-btns-wrapper ' . ( !empty($location) ? 'dpsp-networks-btns-' . esc_attr( $location ) : '' ) . '">';
 
 		// Set current network and networks count		
 		$current_network = 1;
@@ -329,6 +329,10 @@
 			return;
 
 		global $post;
+
+		// Filter to disable the output of the ajax pull share counts js data variables
+		if( ! apply_filters( 'dpsp_output_ajax_pull_post_share_counts', true ) )
+			return;
 
 		// Check last updated timestamp and output the script only
 		// if at least 3 hours have passed

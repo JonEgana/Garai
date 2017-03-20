@@ -4,7 +4,7 @@ Plugin Name: Locations
 Plugin Script: locations.php
 Plugin URI: http://goldplugins.com/our-plugins/locations/
 Description: List your business' locations and show a map for each one.
-Version: 1.14.4
+Version: 1.14.5
 Author: Gold Plugins
 Author URI: http://goldplugins.com/
 
@@ -312,7 +312,7 @@ class LocationsPlugin extends GoldPlugin
 	
 	// have to enqueue built in scripts on wp_enqueue_scripts
 	function locations_add_script(){
-		$gmapsUrl = '//maps.google.com/maps/api/js?sensor=false';
+		$gmapsUrl = '//maps.google.com/maps/api/js?key=' . $this->google_geocoder_api_key . '&sensor=false';		
 		$jsUrl = plugins_url( 'assets/js/locations.js' , __FILE__ );
 		
 		wp_enqueue_script(
@@ -995,11 +995,16 @@ class LocationsPlugin extends GoldPlugin
 		
 		// add category parameter to query if needed
 		if( !empty($category) ) {
-			$args['tax_query'] = array(
-				'taxonomy' => 'location-categories',
-				'field'    => 'slug',
-				'terms'    => $category
-			);
+			// Important: tax_query has to be an *array inside an array*			
+			// Without the double-array it will be ignored
+			$args['tax_query'] = 
+				array(
+					array(
+						'taxonomy' => 'location-categories',
+						'field'    => 'slug',
+						'terms'    => trim($category)
+					)
+				);
 		}
 		
 		// see if any locations match. if so, return the results. if not, return an empty array

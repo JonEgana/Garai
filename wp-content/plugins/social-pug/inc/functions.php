@@ -544,3 +544,31 @@
 		return apply_filters( 'dpsp_get_post_image_url', $post_thumbnail_data[0], $post->ID );
 
 	}
+
+
+	/**
+     * Removes the script tags from the values of an array recursivelly
+     *
+     * @param array $array
+     *
+     * @return array
+     *
+     */
+    function dpsp_array_strip_script_tags( $array = array() ) {
+
+        if( empty( $array ) || ! is_array( $array ) )
+            return array();
+
+        foreach( $array as $key => $value ) {
+
+            if( is_array( $value ) )
+                $array[$key] = dpsp_array_strip_script_tags( $value );
+
+            else
+                $array[$key] = preg_replace( '@<(script)[^>]*?>.*?</\\1>@si', '', $value );
+
+        }
+
+        return $array;
+
+    }

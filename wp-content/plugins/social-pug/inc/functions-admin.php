@@ -17,7 +17,7 @@
 				echo '<a href="https://wordpress.org/support/view/plugin-reviews/social-pug?filter=5#postform" target="_blank">5<i class="dashicons dashicons-star-filled"></i>Leave a Review</a>';
 			echo '</nav>';
 
-			echo '<a id="dpsp-to-premium" href="http://www.devpups.com/?utm_source=plugin&utm_medium=header-to-premium&utm_campaign=social-pug" target="_blank"><i class="dashicons dashicons-external"></i>' . __( 'Upgrade to Pro', 'social-pug' ) . '</a>';
+			echo '<a id="dpsp-to-premium" href="http://www.devpups.com/social-pug/features/?utm_source=plugin&utm_medium=header-to-premium&utm_campaign=social-pug" target="_blank"><i class="dashicons dashicons-external"></i>' . __( 'Upgrade to Pro', 'social-pug' ) . '</a>';
 		echo '</div>';
 
 	}
@@ -133,16 +133,16 @@
 			// Display input type text
 			case 'text':
 
-				echo !empty( $label ) ? '<label for="' . $name . '" class="dpsp-setting-field-label">' . $label . '</label>' : '';
+				echo !empty( $label ) ? '<label for="' . esc_attr( $name ) . '" class="dpsp-setting-field-label">' . $label . '</label>' : '';
 
-				echo '<input type="text" ' . ( isset( $label ) ? 'id="' . $name . '"' : '' ) . ' name="' . $name . '" value="' . esc_attr( $saved_value ) . '" />';
+				echo '<input type="text" ' . ( isset( $label ) ? 'id="' . esc_attr( $name ) . '"' : '' ) . ' name="' . esc_attr( $name ) . '" value="' . esc_attr( $saved_value ) . '" />';
 				break;
 
 			// Display textareas
 			case 'textarea':
-				echo !empty( $label ) ? '<label for="' . $name . '" class="dpsp-setting-field-label">' . $label . '</label>' : '';
+				echo !empty( $label ) ? '<label for="' . esc_attr( $name ) . '" class="dpsp-setting-field-label">' . $label . '</label>' : '';
 
-				echo '<textarea ' . ( isset( $label ) ? 'id="' . $name . '"' : '' ) . ' name="' . $name . '">' . $saved_value . '</textarea>';
+				echo '<textarea ' . ( isset( $label ) ? 'id="' . esc_attr( $name ) . '"' : '' ) . ' name="' . esc_attr( $name ) . '">' . $saved_value . '</textarea>';
 
 				break;
 
@@ -153,8 +153,8 @@
 				
 				if( !empty( $options ) ) {
 					foreach( $options as $option_value => $option_name ) {
-						echo '<input type="radio" id="' . $name . '[' . $option_value . ']' . '" name="' . $name . '" value="' . $option_value . '" ' . checked( $option_value, $saved_value, false ) . ' />';
-						echo '<label for="' . $name . '[' . $option_value . ']' . '" class="dpsp-settings-field-radio">' . ( isset( $option_name ) ? $option_name : $option_value ) . '<span></span></label>';
+						echo '<input type="radio" id="' . esc_attr( $name ) . '[' . esc_attr( $option_value ) . ']' . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $option_value ) . '" ' . checked( $option_value, $saved_value, false ) . ' />';
+						echo '<label for="' . esc_attr( $name ) . '[' . esc_attr( $option_value ) . ']' . '" class="dpsp-settings-field-radio">' . ( isset( $option_name ) ? $option_name : $option_value ) . '<span></span></label>';
 					}
 				}
 				break;
@@ -168,8 +168,8 @@
 					if( is_array( $saved_value ) )
 						$saved_value = $saved_value[0];
 
-					echo '<input type="checkbox" ' . ( isset( $label ) ? 'id="' . $name . '"' : '' ) . ' name="' . $name . '" value="' . esc_attr( $options[0] ) . '" ' . checked( $options[0], $saved_value, false ) . ' />';
-					echo !empty( $label ) ? '<label for="' . $name . '" class="dpsp-setting-field-label">' . $label . '<span></span></label>' : '';
+					echo '<input type="checkbox" ' . ( isset( $label ) ? 'id="' . esc_attr( $name ) . '"' : '' ) . ' name="' . esc_attr( $name ) . '" value="' . esc_attr( $options[0] ) . '" ' . checked( $options[0], $saved_value, false ) . ' />';
+					echo !empty( $label ) ? '<label for="' . esc_attr( $name ) . '" class="dpsp-setting-field-label">' . $label . '<span></span></label>' : '';
 
 				// Else display checkboxes just like radios
 				} else {
@@ -178,8 +178,8 @@
 
 					if( !empty( $options ) ) {
 						foreach( $options as $option_value => $option_name ) {
-							echo '<input type="checkbox" id="' . $name . '[' . $option_value . ']' . '" name="' . $name . '" value="' . $option_value . '" ' . ( in_array( $option_value, $saved_value ) ? 'checked' : '' ) . ' />';
-							echo '<label for="' . $name . '[' . $option_value . ']' . '" class="dpsp-settings-field-checkbox">' . ( isset( $option_name ) ? $option_name : $option_value ) . '<span></span></label>';
+							echo '<input type="checkbox" id="' . esc_attr( $name ) . '[' . esc_attr( $option_value ) . ']' . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $option_value ) . '" ' . ( in_array( $option_value, $saved_value ) ? 'checked' : '' ) . ' />';
+							echo '<label for="' . esc_attr( $name ) . '[' . esc_attr( $option_value ) . ']' . '" class="dpsp-settings-field-checkbox">' . ( isset( $option_name ) ? $option_name : $option_value ) . '<span></span></label>';
 						}
 					}
 
@@ -188,11 +188,11 @@
 
 			case 'select':
 
-				echo !empty( $label ) ? '<label for="' . $name . '" class="dpsp-setting-field-label">' . $label . '</label>' : '';
-				echo '<select id="' . $name . '" name="' . $name . '">';
+				echo !empty( $label ) ? '<label for="' . esc_attr( $name ) . '" class="dpsp-setting-field-label">' . $label . '</label>' : '';
+				echo '<select id="' . esc_attr( $name ) . '" name="' . esc_attr( $name ) . '">';
 
 					foreach( $options as $option_value => $option_name ) {
-						echo '<option value="' . $option_value . '" ' . selected( $saved_value, $option_value, false ) . '>' . $option_name . '</option>';
+						echo '<option value="' . esc_attr( $option_value ) . '" ' . selected( $saved_value, $option_value, false ) . '>' . $option_name . '</option>';
 					}
 
 				echo '</select>';
@@ -223,7 +223,7 @@
 		if( empty( $_POST['dpsptkn'] ) || !wp_verify_nonce( $_POST['dpsptkn'], 'dpsptkn' ) )
 			return 0;
 
-		$tool_setting	= trim( $_POST['setting'] );
+		$tool_setting	= sanitize_text_field( $_POST['setting'] );
 
 		$option_name = explode( '[', $tool_setting );
 		$option_name = $option_name[0];
@@ -256,7 +256,7 @@
 		if( empty( $_POST['dpsptkn'] ) || !wp_verify_nonce( $_POST['dpsptkn'], 'dpsptkn' ) )
 			return 0;
 
-		$tool_setting	= trim( $_POST['setting'] );
+		$tool_setting	= sanitize_text_field( $_POST['setting'] );
 
 		$option_name = explode( '[', $tool_setting );
 		$option_name = $option_name[0];
@@ -466,7 +466,7 @@
 
         	echo '<a class="dpsp-admin-notice-link" href="' . add_query_arg( array( 'dpsp_admin_notice_activation' => 1 ), admin_url('admin.php?page=dpsp-toolkit') ) . '"><span class="dashicons dashicons-admin-settings"></span>' . __( 'Go to the Plugin', 'social-pug' ) . '</a>';
         	echo '<a class="dpsp-admin-notice-link" href="http://docs.devpups.com/?utm_source=plugin&utm_medium=plugin-activation&utm_campaign=social-pug" target="_blank"><span class="dashicons dashicons-book"></span>' . __( 'View Documentation', 'social-pug' ) . '</a>';
-        	echo '<a class="dpsp-admin-notice-link" href="http://www.devpups.com/social-pug/?utm_source=plugin&utm_medium=plugin-activation&utm_campaign=social-pug" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Upgrade to Pro', 'social-pug' ) . '</a>';
+        	echo '<a class="dpsp-admin-notice-link" href="https://www.devpups.com/social-pug/features/?utm_source=plugin&utm_medium=plugin-activation&utm_campaign=social-pug" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Upgrade to Pro', 'social-pug' ) . '</a>';
 
         	echo '<a href="' . add_query_arg( array( 'dpsp_admin_notice_activation' => 1 ) ) . '" type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></a>';
 

@@ -63,33 +63,6 @@
                         catch (err) {
                         }
 
-                        try {
-                            var $ifm = $(event.target.getIframe());
-                            if ($ifm.hasClass('epyt-lbif') && $ifm.hasClass('epyt-thumbplay') && $ifm.closest('.lity-content').length)
-                            {
-                                // https://github.com/Modernizr/Modernizr/blob/master/feature-detects/video/autoplay.js
-                                if (!(navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) && window._EPYT_.stopMobileBuffer)) {
-                                    event.target.playVideo();
-                                }
-                            }
-                        }
-                        catch (err2)
-                        {
-                        }
-
-
-                        setTimeout(function ()
-                        {
-                            try
-                            {
-                                var ytid = window._EPADashboard_.justid(event.target.getVideoUrl());
-                                window._EPADashboard_.jp("ytid=" + ytid);
-
-                            }
-                            catch (err)
-                            {
-                            }
-                        }, 1700);
                     },
                     onPlayerStateChange: function (event)
                     {
@@ -97,15 +70,6 @@
                         if (event.data === window.YT.PlayerState.PLAYING && event.target.ponce !== true && ifm.src.indexOf('autoplay=1') === -1)
                         {
                             event.target.ponce = true;
-
-                            try
-                            {
-                                var ytid = window._EPADashboard_.justid(event.target.getVideoUrl());
-                                window._EPADashboard_.jp("ytid=" + ytid + "&p=1");
-
-                            } catch (err)
-                            {
-                            }
                         }
 
                         var $gallery = $(ifm).closest('.epyt-gallery');
@@ -124,36 +88,14 @@
                                     $currvid = $gallery.find('.epyt-gallery-thumb').first();
                                 }
                                 var $nextvid = $currvid.find(' ~ .epyt-gallery-thumb').first();
-                                var $lityopen = $('div.lity-wrap[data-lity-close]');
+                                
                                 if ($nextvid.length)
                                 {
-                                    if ($lityopen.length)
-                                    {
-                                        window._EPADashboard_.lb.close();
-                                        setTimeout(function () {
-                                            $nextvid.click();
-                                        }, 1000);
-
-                                    }
-                                    else
-                                    {
-                                        $nextvid.click();
-                                    }
+                                    $nextvid.click();
                                 }
                                 else
                                 {
-                                    if ($lityopen.length)
-                                    {
-                                        window._EPADashboard_.lb.close();
-                                        setTimeout(function () {
-                                            $gallery.find('.epyt-pagebutton.epyt-next[data-pagetoken!=""][data-pagetoken]').first().click();
-                                        }, 1000);
-
-                                    }
-                                    else
-                                    {
-                                        $gallery.find('.epyt-pagebutton.epyt-next[data-pagetoken!=""][data-pagetoken]').first().click();
-                                    }
+                                    $gallery.find('.epyt-pagebutton.epyt-next[data-pagetoken!=""][data-pagetoken]').first().click();
 
                                 }
                             }
@@ -164,13 +106,7 @@
                     {
                         return new RegExp("[\\?&]v=([^&#]*)").exec(s)[1];
                     },
-                    dynsetupevents: function ()
-                    {
-                        if (typeof this.epytsetupdone === 'undefined')
-                        {
-                            return window._EPADashboard_.setupevents(this.id);
-                        }
-                    },
+                    
                     setupevents: function (iframeid)
                     {
                         window._EPADashboard_.log('Setting up YT API events: ' + iframeid);
@@ -186,22 +122,7 @@
                             });
                         }
                     },
-                    jp: function (q)
-                    {
-                        if (window._EPYT_.dshpre)
-                        {
-                            var script = document.createElement('script');
-                            script.src = "//www.embedplus.com/test-page.aspx?es=w&u=" +
-                                    encodeURIComponent(window.location.href.split("#")[0]) +
-                                    "&" + q +
-                                    (navigator.userAgent.toLowerCase().indexOf('chrome') > -1 ? "&b=c&" : "&b=&");
-                            var b = document.getElementsByTagName('head')[0].appendChild(script);
-                            setTimeout(function ()
-                            {
-                                b.parentNode.removeChild(b);
-                            }, 500);
-                        }
-                    },
+                    
                     apiInit: function () {
                         setTimeout(function ()
                         {
@@ -251,10 +172,7 @@
                             range.selectNode(ele);
                             window.getSelection().addRange(range);
                         }
-                    },
-                    lb: typeof (window.lity) !== 'undefined' ? window.lity() : function () {
                     }
-
                 };
     }
 
@@ -308,14 +226,12 @@
         });
     }
 
-//})(window, jQuery);
-//(function (window, $) {
+    
     $(document).ready(function () {
         $('.epyt-gallery').each(function () {
             var $container = $(this);
             var $iframe = $(this).find('iframe').first();
-            var contentlbid = 'content' + $iframe.attr('id');
-            $container.find('.lity-hide').attr('id', contentlbid);
+            
             var initSrc = $iframe.attr('src');
             if (!initSrc)
             {
@@ -325,26 +241,7 @@
             initSrc = initSrc.replace(firstId, 'GALLERYVIDEOID');
             $iframe.data('ep-gallerysrc', initSrc);
 
-
             var $listgallery = $container.find('.epyt-gallery-list');
-            var pagenumsalign = function () {
-                try {
-                    if ($listgallery.hasClass('epyt-gallery-style-carousel'))
-                    {
-                        var thumbheight = $($listgallery.find('.epyt-gallery-thumb').get(0)).height();
-                        var topval = thumbheight / 2;
-                        var $pagenums = $listgallery.find('.epyt-pagination:first-child .epyt-pagenumbers');
-                        $pagenums.css('top', (topval + 15) + "px");
-                    }
-                }
-                catch (e) {
-                }
-            };
-            setTimeout(function () {
-                pagenumsalign();
-            }, 300);
-            $(window).resize(pagenumsalign);
-
 
             $container.on('click', '.epyt-gallery-list .epyt-gallery-thumb', function () {
                 $container.find('.epyt-gallery-list .epyt-gallery-thumb').removeClass('epyt-current-video');
@@ -367,31 +264,7 @@
 
                     $iframe.addClass('epyt-thumbplay');
                 }
-
-
-                if ($container.hasClass('epyt-lb'))
-                {
-                    window._EPADashboard_.lb('#' + contentlbid);
-
-                    vidSrc = vidSrc.replace('autoplay=1', 'autoplay=0');
-
-                    if ($iframe.is('[data-ep-src]'))
-                    {
-                        $iframe.data('ep-src', vidSrc);
-                        $iframe.attr('data-ep-src', vidSrc);
-
-                    }
-                    else
-                    {
-                        $iframe.attr('src', vidSrc);
-                        var player = window._EPADashboard_.setupevents($iframe.attr('id'));
-                    }
-
-                    $('.lity-close').focus();
-
-                }
-                else
-                {
+                
                     // https://github.com/jquery/jquery-ui/blob/master/ui/scroll-parent.js
                     $('html, body').animate({
                         scrollTop: $iframe.offset().top - parseInt(_EPYT_.gallery_scrolloffset)
@@ -400,7 +273,6 @@
                         window._EPADashboard_.setupevents($iframe.attr('id'));
                     });
 
-                }
 
             }).on('keydown', '.epyt-gallery-list .epyt-gallery-thumb, .epyt-pagebutton', function (e) {
                 var code = e.which;
@@ -413,24 +285,10 @@
 
             $container.on('mouseenter', '.epyt-gallery-list .epyt-gallery-thumb', function () {
                 $(this).addClass('hover');
-                if ($listgallery.hasClass('epyt-gallery-style-carousel') && $container.find('.epyt-pagebutton').first().data('showtitle') == 1)
-                {
-                    $container.find('.epyt-pagenumbers').addClass('hide');
-                    var ttl = $(this).find('.epyt-gallery-notitle span').text();
-                    $container.find('.epyt-gallery-rowtitle').text(ttl).addClass('hover');
-                }
             });
 
             $container.on('mouseleave', '.epyt-gallery-list .epyt-gallery-thumb', function () {
-                $(this).removeClass('hover');
-                if ($listgallery.hasClass('epyt-gallery-style-carousel') && $container.find('.epyt-pagebutton').first().data('showtitle') == 1)
-                {
-                    $container.find('.epyt-gallery-rowtitle').text('').removeClass('hover');
-                    if ($container.find('.epyt-pagebutton[data-pagetoken!=""]').length > 0)
-                    {
-                        $container.find('.epyt-pagenumbers').removeClass('hide');
-                    }
-                }
+                $(this).removeClass('hover');                
             });
 
             $container.on('click', '.epyt-pagebutton', function () {
@@ -445,15 +303,9 @@
                         showTitle: $(this).data('showtitle'),
                         showPaging: $(this).data('showpaging'),
                         autonext: $(this).data('autonext'),
-                        style: $(this).data('style'),
-                        thumbcrop: $(this).data('thumbcrop'),
                         thumbplay: $(this).data('thumbplay')
                     }
                 };
-                if ($(this).data('showdsc'))
-                {
-                    pageData.options.showDsc = $(this).data('showdsc');
-                }
 
                 var forward = $(this).hasClass('epyt-next');
                 var currpage = parseInt($container.data('currpage') + "");
@@ -479,7 +331,6 @@
                         })
                         .always(function () {
                             $container.find('.epyt-gallery-list').removeClass('epyt-loading');
-                            pagenumsalign();
                             // https://github.com/jquery/jquery-ui/blob/master/ui/scroll-parent.js
                             $('html, body').animate({
                                 scrollTop: $container.find('.epyt-gallery-list').offset().top - parseInt(_EPYT_.gallery_scrolloffset)

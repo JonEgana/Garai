@@ -5,8 +5,8 @@ Tags: social, social share, social media, social network, social share buttons, 
 
 
 Requires at least: 3.1
-Tested up to: 4.7.2
-Stable tag: 1.3.1
+Tested up to: 4.7.3
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,6 +70,9 @@ http://www.devpups.com/
 
 
 == Changelog ==
+= 1.3.2 =
+* Fixed: Performed a security audit and fixed security issues
+
 = 1.3.1 =
 * Fixed: Fatal error on some websites.
 

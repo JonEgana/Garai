@@ -1,0 +1,146 @@
+# Translation of Themes - Camp in Spanish (Spain)
+# This file is distributed under the same license as the Themes - Camp package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2016-11-13 12:21:37+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.3.0-alpha\n"
+"Language: es\n"
+"Project-Id-Version: Themes - Camp\n"
+
+#. Description of the plugin/theme
+msgid "Are you fond of that cozy feeling when you are sitting on the evening patio wrapped in a soft comforter and reading a mesmerizing book while taking small sips of hot tea? Do you wish to transcend this feeling to your website, so that your users will be immersed in the same enigmatic ambience? Then we are proud to introduce Camp - a theme that is exquisite like a rare old book, and easy to use like scissors. With this theme, your posts will receive a trace of antique wisdom - a captivating feature your readers are going to love! To top it off, this theme is compliant with all of the plugins, which were created by BestWebSoft, among which PDF & Print (http://wordpress.org/plugins/pdf-print/) and Portfolio plugins (http://wordpress.org/plugins/portfolio/) will be best for grasping the exquisite atmosphere of your website. This way, you can install those and rest assured that no compatibility issues will ever appear. See for yourself - check out the demo of this theme at http://wp-demo-theme.bestweblayout.com/camp/"
+msgstr "¿Puedes imaginarte esa fantástica sensación de estar sentado en un patio de noche, en un cómodo sofá, leyendo ensimismado un libro mientras das pequeños sorbos a un té caliente? ¿Te gustaría mostrar en tu sitio web esa misma experiencia, de manera que tus usuarios disfruten de esa sensación enigmática? Os presentamos Camp -un tema tan exquisito como un libro raro y viejo, y tan fácil de usar como unas tijeras. ¡Con este tema, tus entradas tendrán un toque de sabiduría antigua- una sensación cautivadora que encantará a tus lectores! De principio a fin, integra todos los plugins creados por BestWebSoft, como PDF & Print (http://wordpress.org/plugins/pdf-print/) y Portfolio (http://wordpress.org/plugins/portfolio/), que te ayudarán a crear una atmósfera exquista a tu sitio web. De esta manera, instálalos para asegurarte de que no aparecerán problemas de compatibilidad. Comprúebalo tu mismo - visita la demo de este tema en http://wp-demo-theme.bestweblayout.com/camp/ "
+
+#. Theme Name of the plugin/theme
+msgid "Camp"
+msgstr "Camp"
+
+#: searchform.php:2
+msgid "Enter search keyword"
+msgstr "Escribe la palabra clave de búsqueda"
+
+#: search.php:11
+msgid "Search results for: %s"
+msgstr "Resultados de la búsqueda para: %s"
+
+#: functions.php:166
+msgid "&larr; Previous post"
+msgstr "&larr; Publicación anterior"
+
+#: functions.php:161
+msgid "Next post &rarr;"
+msgstr "Siguiente publicación &rarr;"
+
+#: functions.php:155
+msgid "&larr; Older posts"
+msgstr "&larr; Artículos anteriores"
+
+#: functions.php:150
+msgid "Newer posts &rarr;"
+msgstr "Artículos recientes &rarr;"
+
+#: functions.php:140
+msgid "Edit"
+msgstr "Editar"
+
+#: functions.php:128
+msgid " at "
+msgstr "en"
+
+#: functions.php:123
+msgid "says:"
+msgstr "dice:"
+
+#: functions.php:74
+msgid "If you want to add this post to slider, choose the checkbox &nbsp;"
+msgstr "Si quieres añadir esta entrada al slider, marca a caja de verificación &nbsp;"
+
+#: functions.php:62
+msgid "For Slider"
+msgstr "Para el slider"
+
+#: footer.php:17
+msgid "Powered by %s and %s"
+msgstr "Funciona con %s y %s"
+
+#: content.php:70
+msgid "Add to slider?"
+msgstr "¿Añadir al slider?"
+
+#: content.php:66
+msgid "Tags: "
+msgstr "Etiquetas: "
+
+#: content.php:50
+msgid "Next &rarr;"
+msgstr "Siguiente &rarr;"
+
+#: content.php:47
+msgid "&larr; Previous"
+msgstr "&larr; Anterior"
+
+#: content.php:36 content.php:38
+msgid "in"
+msgstr "en"
+
+#: content.php:29
+msgid "Posted on "
+msgstr "Publicado en"
+
+#: content.php:17
+msgid "Featured post"
+msgstr "Entrada destacada"
+
+#: content-none.php:12
+msgid "Try to search again"
+msgstr "Prueba a buscar de nuevo"
+
+#: content-none.php:11
+msgid "Nothing Found"
+msgstr "No se ha encontrado nada"
+
+#: comments.php:38 functions.php:138
+msgid "Reply"
+msgstr "Responder"
+
+#: comments.php:31 comments.php:53
+msgid "Newer comments &rarr;"
+msgstr "Comentarios más recientes &rarr;"
+
+#: comments.php:28 comments.php:50
+msgid "&larr; Older comments"
+msgstr "&larr; Comentarios más antiguos"
+
+#: comments.php:21
+msgid "One response to &ldquo; %2$s &rdquo;"
+msgid_plural "%1$s responses to &ldquo; %2$s &rdquo;"
+msgstr[0] "Una respuesta a &ldquo; %2$s &rdquo;"
+msgstr[1] "%1$s respuestas a &ldquo; %2$s &rdquo;"
+
+#: comments.php:58
+msgid "Comments are closed."
+msgstr "Los comentarios están cerrados."
+
+#: archive.php:20 index.php:21 page.php:14
+msgid "Top"
+msgstr "Arriba"
+
+#: 404.php:15
+msgid "Not found"
+msgstr "No encontrado"
+
+#. Author URI of the plugin/theme
+msgid "http://bestweblayout.com/"
+msgstr "http://bestweblayout.com/"
+
+#. Author of the plugin/theme
+msgid "BestWebLayout"
+msgstr "BestWebLayout"
+
+#. Theme URI of the plugin/theme
+msgid "http://bestweblayout.com/products/camp/"
+msgstr "http://bestweblayout.com/products/camp/"
